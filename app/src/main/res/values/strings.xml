@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">TuneTrain</string>
+    <string name="sandbox_button">Sandbox</string>
+    <string name="training_button">Ear Training</string>
+    <string name="stats_button">Stats</string>
 </resources>
