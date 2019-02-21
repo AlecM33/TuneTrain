@@ -1,31 +1,19 @@
 package com.example.alec.tunetrain;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-public class StatsActivity extends AppCompatActivity {
+public class TrainingActivity extends AppCompatActivity {
 
-    private static final String TAG = "StatsActivity";
+    private static final String TAG = "TrainingActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_training);
         Log.d(TAG, "onCreate(Bundle) called");
 
-        setContentView(R.layout.activity_stats);
-
-        //calling and displaying the stats Fragment
-        FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.id.fragment_container);
-        if (fragment == null) {
-            fragment = new StatsFragment();
-            fm.beginTransaction()
-                    .add(R.id.fragment_container, fragment)
-                    .commit();
-        }
     }
 
     @Override

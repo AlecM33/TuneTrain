@@ -17,6 +17,7 @@ public class LandingPageActivity extends AppCompatActivity {
 
     private static final String TAG = "LandingPageActivity";
     private Button mStatsButton;
+    private Button mTrainingButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,16 @@ public class LandingPageActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Start StatsActivity
                 Intent intent = new Intent(LandingPageActivity.this, StatsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        mStatsButton = (Button)findViewById(R.id.training_button);
+        mStatsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start StatsActivity
+                Intent intent = new Intent(LandingPageActivity.this, TrainingActivity.class);
                 startActivity(intent);
             }
         });
