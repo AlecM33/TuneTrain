@@ -36,8 +36,8 @@ public class LandingPageActivity extends AppCompatActivity {
             }
         });
 
-        mStatsButton = (Button)findViewById(R.id.training_button);
-        mStatsButton.setOnClickListener(new View.OnClickListener() {
+        mTrainingButton = (Button)findViewById(R.id.training_button);
+        mTrainingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Start StatsActivity
