@@ -4,4 +4,5 @@
     <string name="training_button">Ear Training</string>
     <string name="stats_button">Stats</string>
     <string name="stats_title">Statistics</string>
+    <string name="title_activity_sandbox">SandboxActivity</string>
 </resources>

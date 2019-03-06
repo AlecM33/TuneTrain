@@ -18,6 +18,7 @@ public class LandingPageActivity extends AppCompatActivity {
     private static final String TAG = "LandingPageActivity";
     private Button mStatsButton;
     private Button mTrainingButton;
+    private Button mSandboxButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,16 @@ public class LandingPageActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Start StatsActivity
                 Intent intent = new Intent(LandingPageActivity.this, TrainingActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        mSandboxButton = (Button)findViewById(R.id.sandbox_button);
+        mSandboxButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start SandboxActivity
+                Intent intent = new Intent(LandingPageActivity.this, SandboxActivity.class);
                 startActivity(intent);
             }
         });
