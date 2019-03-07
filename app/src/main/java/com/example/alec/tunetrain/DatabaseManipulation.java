@@ -26,7 +26,6 @@ public class DatabaseManipulation {
             "DROP TABLE IF EXISTS " + DatabaseContract.Templates.TABLE_NAME;
 
     /* NOTES */
-
     private static final String SQL_CREATE_NOTES =
             "CREATE TABLE " + DatabaseContract.Notes.TABLE_NAME + " (" +
                     DatabaseContract.Notes.COLUMN_NOTE_ID + " INT PRIMARY KEY," +
