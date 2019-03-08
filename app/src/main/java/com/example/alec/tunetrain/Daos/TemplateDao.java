@@ -14,4 +14,7 @@ public interface TemplateDao {
 
     @Query("SELECT * FROM Templates")
     List<Template> getTemplates();
+
+    @Query("SELECT * FROM Templates WHERE template_name=:name")
+    Template getTemplate(String name);
 }

@@ -5,4 +5,7 @@
     <string name="stats_button">Stats</string>
     <string name="stats_title">Statistics</string>
     <string name="title_activity_sandbox">SandboxActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
