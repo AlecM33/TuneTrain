@@ -5,6 +5,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
+import com.example.alec.tunetrain.R;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -22,9 +24,9 @@ public class Note {
     @ColumnInfo(name = "file_name")
     public int fileName;
 
-    public Note(String noteName, int noteFreq) {
+    public Note(String noteName, int fileName) {
         this.noteName = noteName;
-        this.noteFreq = noteFreq;
+        this.fileName = fileName;
     }
 
     /*
@@ -39,5 +41,22 @@ public class Note {
         }
 
         return fileMap;
+    }
+
+    public static Note[] populateData() {
+        return new Note[] {
+                new Note("A", R.raw.a),
+                new Note("Ab", R.raw.ab),
+                new Note("Bb", R.raw.bb),
+                new Note("B", R.raw.b),
+                new Note("C", R.raw.c),
+                new Note("C#", R.raw.cs),
+                new Note("D", R.raw.d),
+                new Note("Eb", R.raw.eb),
+                new Note("E", R.raw.e),
+                new Note("F", R.raw.f),
+                new Note("F#", R.raw.fs),
+                new Note("G", R.raw.g)
+        };
     }
 }

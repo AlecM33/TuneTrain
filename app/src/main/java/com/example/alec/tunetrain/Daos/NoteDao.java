@@ -9,6 +9,10 @@ public interface NoteDao {
     @Insert
     void insert(Note note);
 
+    @Insert
+    void insertAll(Note... notes);
+
+
     @Query("DELETE FROM Notes")
     void deleteAll();
 

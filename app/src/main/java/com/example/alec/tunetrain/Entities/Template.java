@@ -84,4 +84,11 @@ public class Template {
         };
         return pads;
     }
+
+    public static Template[] populateData() {
+        return new Template[] {
+                new Template("Chromatic", "A", "Bb", "B", "C",
+                        "C#", "D", "Eb", "E", "F", "F#", "G", "Ab")
+        };
+    }
 }

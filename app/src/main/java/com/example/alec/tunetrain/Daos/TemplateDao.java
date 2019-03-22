@@ -9,6 +9,9 @@ public interface TemplateDao {
     @Insert
     void insert(Template template);
 
+    @Insert
+    void insertAll(Template... templates);
+
     @Query("DELETE FROM Templates")
     void deleteAll();
 
