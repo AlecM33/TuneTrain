@@ -55,7 +55,9 @@ public abstract class AppDatabase extends RoomDatabase {
                             public void run() {
                                 Log.d("DB","onCreate(Bundle) database initialized");
 
-                                getAppDatabase(context).templateDao().insertAll(Template.populateData());
+                                getAppDatabase(context).templateDao().insertAll(Template.populateMajorScales());
+                                getAppDatabase(context).templateDao().insertAll(Template.populateMinorScales());
+                                getAppDatabase(context).templateDao().insertAll(Template.populateBluesScales());
                                 getAppDatabase(context).noteDao().insertAll(Note.populateData());
                             }
                         });

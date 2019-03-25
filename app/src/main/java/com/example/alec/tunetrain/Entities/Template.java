@@ -85,10 +85,74 @@ public class Template {
         return pads;
     }
 
-    public static Template[] populateData() {
-        return new Template[] {
-                new Template("Chromatic", "A", "Bb", "B", "C",
-                        "C#", "D", "Eb", "E", "F", "F#", "G", "Ab")
-        };
+    private static String[] getNotesInScale(String[] notes, int noteIndex, Double[] intervals) {
+        String[] notesInScale = {};
+        int currentDegree = 0;
+        for (int i = 0; i < intervals.length; i++) {
+            if (noteIndex + currentDegree >= notes.length) {
+                notesInScale[i] = notes[noteIndex + currentDegree - notes.length];
+            } else {
+                notesInScale[i] = notes[noteIndex + currentDegree];
+            }
+            currentDegree = currentDegree + (int)(2 * intervals[i]);
+        }
+        return notesInScale;
+    }
+
+    private static Template[] generateMajorTemplates() {
+        String[] notes = {"A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab"};
+        Double[] intervals = {1.0, 1.0, 0.5, 1.0, 1.0, 1.0, 0.5};
+        Template[] majorTemplates = {};
+        String[] notesInScale;
+        for (int i = 0; i < notes.length; i++) {
+            notesInScale = getNotesInScale(notes, i, intervals);
+            majorTemplates[i] = new Template(notes[i] + " Major", notesInScale[0],
+                    notesInScale[1], notesInScale[2], notesInScale[3], notesInScale[4],
+                    notesInScale[5], notesInScale[6], "none", "none", "none",
+                    "none", "none");
+        }
+        return majorTemplates;
+    }
+
+    private static Template[] generateMinorTemplates() {
+        String[] notes = {"A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab"};
+        Double[] intervals = {1.0, 0.5, 1.0, 1.0, 0.5, 1.0, 1.0};
+        Template[] minorTemplates = {};
+        String[] notesInScale;
+        for (int i = 0; i < notes.length; i++) {
+            notesInScale = getNotesInScale(notes, i, intervals);
+            minorTemplates[i] = new Template(notes[i] + " Minor", notesInScale[0],
+                    notesInScale[1], notesInScale[2], notesInScale[3], notesInScale[4],
+                    notesInScale[5], notesInScale[6], "none", "none", "none",
+                    "none", "none");
+        }
+        return minorTemplates;
+    }
+
+    private static Template[] generateBluesTemplates() {
+        String[] notes = {"A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab"};
+        Double[] intervals = {1.5, 1.0, 0.5, 0.5, 1.5, 1.0};
+        Template[] bluesTemplates = {};
+        String[] notesInScale;
+        for (int i = 0; i < notes.length; i++) {
+            notesInScale = getNotesInScale(notes, i, intervals);
+            bluesTemplates[i] = new Template(notes[i] + " Blues", notesInScale[0],
+                    notesInScale[1], notesInScale[2], notesInScale[3], notesInScale[4],
+                    notesInScale[5], "none", "none", "none", "none",
+                    "none", "none");
+        }
+        return bluesTemplates;
+    }
+
+    public static Template[] populateMajorScales() {
+        return generateMajorTemplates();
+    }
+
+    public static Template[] populateMinorScales() {
+        return generateMinorTemplates();
+    }
+
+    public static Template[] populateBluesScales() {
+        return generateBluesTemplates();
     }
 }
