@@ -1,5 +1,6 @@
 package com.example.alec.tunetrain;
 
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Build;
@@ -30,8 +31,11 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
     private int sounds[] = new int[NUMBER_OF_PADS];
     private String[] currentPads;
     private String lastPlayed = "A";
+    List<Template> allTemplates;
     private Button mPlayButton;
     private Button mNextButton;
+    private Button mSelectButton;
+    private Button mCreateButton;
     private Random r = new Random();
     private int rIndex =  0;
     private String randomNote = "";
@@ -66,17 +70,32 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView(Inflater) called");
-        trainingMode = this.getArguments().getString("Mode");
-        View v = inflater.inflate(R.layout.fragment_training, container, false);
+        //trainingMode = this.getArguments().getString("Mode");
+        View v;
+        if (this.getClass().getSimpleName().equals("TrainingActivity")) {
+            v = inflater.inflate(R.layout.fragment_training, container, false);
+            mPlayButton = v.findViewById(R.id.play);
+            mPlayButton.setOnClickListener(this);
+            mNextButton = v.findViewById(R.id.next);
+            mNextButton.setOnClickListener(this);
+            toast = Toast.makeText(getActivity(), "CORRECT", Toast.LENGTH_SHORT);
+        } else {
+            v = inflater.inflate(R.layout.fragment_sandbox, container, false);
+            mSelectButton = v.findViewById(R.id.select);
+            mSelectButton.setOnClickListener(this);
+            mCreateButton = v.findViewById(R.id.create);
+            mCreateButton.setOnClickListener(this);
+        }
         AppDatabase db = AppDatabase.getAppDatabase(getActivity().getBaseContext());
-        db.templateDao().insertAll(Template.populateChromaticScale());
-        db.templateDao().insertAll(Template.populateMajorScales());
-        db.templateDao().insertAll(Template.populateMinorScales());
-        db.templateDao().insertAll(Template.populateBluesScales());
-        db.noteDao().insertAll(Note.populateData());
+        if (db.templateDao().getTemplates().size() == 0) {
+            db.templateDao().insertAll(Template.populateChromaticScale());
+            db.templateDao().insertAll(Template.populateMajorScales());
+            db.templateDao().insertAll(Template.populateMinorScales());
+            db.templateDao().insertAll(Template.populateBluesScales());
+            db.noteDao().insertAll(Note.populateData());
+        }
 
         currentTemplate = db.templateDao().getTemplate("Chromatic");
-        List<Template> allTemplates = db.templateDao().getTemplates();
         List<Note> Notes = db.noteDao().getNotes();
 
         //set up onclick listeners for buttons
@@ -101,17 +120,6 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
         for (int i = 0; i < sounds.length; i++ ){
             sounds[i] = mSoundPool.load(getActivity().getBaseContext(), fileMap.get(currentPads[i]), 1);
         }
-
-
-        mPlayButton = v.findViewById(R.id.play);
-        mPlayButton.setOnClickListener(this);
-
-        mNextButton = v.findViewById(R.id.next);
-        mNextButton.setOnClickListener(this);
-
-        toast = Toast.makeText(getActivity(), "CORRECT", Toast.LENGTH_SHORT);
-
-
 
         // DEBUG STUFF ----------------------------------------------
 
@@ -160,6 +168,10 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
 //        Log.d(TAG, lastPlayed);
         buttonPressed = true;
         switch (v.getId()){
+            case R.id.select:
+                Intent intent = new Intent(getActivity(), SelectTemplateActivity.class);
+                startActivity(intent);
+                break;
             case R.id.play:
                 mPlayButton.setEnabled(false);
                 playNextNote();
@@ -171,77 +183,77 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
             case R.id.pad1:
                 mSoundPool.play(sounds[0], 1, 1, 0, 0, 1);
                 lastPlayed = mPads.get(0).getText().toString();
-                checkIfCorrectNote();
+                handleNotePress();
                 break;
 
             case R.id.pad2:
                 mSoundPool.play(sounds[1], 1, 1, 0, 0, 1);
                 lastPlayed = mPads.get(1).getText().toString();
-                checkIfCorrectNote();
+                handleNotePress();
                 break;
 
             case R.id.pad3:
                 mSoundPool.play(sounds[2], 1, 1, 0, 0, 1);
                 lastPlayed = mPads.get(2).getText().toString();
-                checkIfCorrectNote();
+                handleNotePress();
                 break;
 
             case R.id.pad4:
                 mSoundPool.play(sounds[3], 1, 1, 0, 0, 1);
                 lastPlayed = mPads.get(3).getText().toString();
-                checkIfCorrectNote();
+                handleNotePress();
                 break;
 
             case R.id.pad5:
                 mSoundPool.play(sounds[4], 1, 1, 0, 0, 1);
                 lastPlayed = mPads.get(4).getText().toString();
-                checkIfCorrectNote();
+                handleNotePress();
                 break;
 
             case R.id.pad6:
                 mSoundPool.play(sounds[5], 1, 1, 0, 0, 1);
                 lastPlayed = mPads.get(5).getText().toString();
-                checkIfCorrectNote();
+                handleNotePress();
                 break;
 
             case R.id.pad7:
                 mSoundPool.play(sounds[6], 1, 1, 0, 0, 1);
                 lastPlayed = mPads.get(6).getText().toString();
-                checkIfCorrectNote();
+                handleNotePress();
                 break;
 
             case R.id.pad8:
                 mSoundPool.play(sounds[7], 1, 1, 0, 0, 1);
                 lastPlayed = mPads.get(7).getText().toString();
-                checkIfCorrectNote();
+                handleNotePress();
 
                 break;
 
             case R.id.pad9:
                 mSoundPool.play(sounds[8], 1, 1, 0, 0, 1);
                 lastPlayed = mPads.get(8).getText().toString();
-                checkIfCorrectNote();
+                handleNotePress();
 
                 break;
 
             case R.id.pad10:
                 mSoundPool.play(sounds[9], 1, 1, 0, 0, 1);
                 lastPlayed = mPads.get(9).getText().toString();
-                checkIfCorrectNote();
+                handleNotePress();
 
                 break;
 
             case R.id.pad11:
                 mSoundPool.play(sounds[10], 1, 1, 0, 0, 1);
                 lastPlayed = mPads.get(10).getText().toString();
-                checkIfCorrectNote();
+                handleNotePress();
 
                 break;
 
             case R.id.pad12:
                 mSoundPool.play(sounds[11], 1, 1, 0, 0, 2);
                 lastPlayed = mPads.get(11).getText().toString();
-                checkIfCorrectNote();
+                handleNotePress();
 
                 break;
         }
@@ -255,17 +267,18 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
 
     }
 
-    public void checkIfCorrectNote() {
-
-        if (lastPlayed.equals(randomNote)) {
-            Log.d(TAG, "CORRECT");
-            toast.setText("CORRECT");
-            toast.show();
-            mPlayButton.setEnabled(true);
-        } else {
-            toast.setText("INCORRECT, TRY AGAIN");
-            toast.show();
-            Log.d(TAG, "INCORRECT");
+    public void handleNotePress() {
+        if (this.getClass().getSimpleName().equals("TrainingActivity")) {
+            if (lastPlayed.equals(randomNote)) {
+                Log.d(TAG, "CORRECT");
+                toast.setText("CORRECT");
+                toast.show();
+                mPlayButton.setEnabled(true);
+            } else {
+                toast.setText("INCORRECT, TRY AGAIN");
+                toast.show();
+                Log.d(TAG, "INCORRECT");
+            }
         }
     }
 }

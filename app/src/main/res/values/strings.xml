@@ -11,4 +11,5 @@
     <string name="mode_alert">Select The Training Mode</string>
     <string name="spotify_mode">Spotify</string>
     <string name="note_mode">Note</string>
+    <string name="template_list_title">Your Templates</string>
 </resources>
