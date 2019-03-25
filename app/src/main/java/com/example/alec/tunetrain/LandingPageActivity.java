@@ -1,19 +1,11 @@
 package com.example.alec.tunetrain;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
-
-import com.example.alec.tunetrain.Entities.Template;
-import java.util.ArrayList;
-import java.util.List;
 
 public class LandingPageActivity extends AppCompatActivity {
 
@@ -91,10 +83,4 @@ public class LandingPageActivity extends AppCompatActivity {
         super.onDestroy();
         Log.d(TAG, "onDestroy() called");
     }
-
-    /**
-     * A native method that is implemented by the 'native-lib' native library,
-     * which is packaged with this application.
-     */
-    public native String stringFromJNI();
 }

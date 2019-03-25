@@ -24,16 +24,6 @@
     android:columnCount="3"
     android:orientation="horizontal">
 
-
-    <Button
-        android:text="START"
-        android:id="@+id/start"
-        android:layout_gravity="fill"
-        android:layout_row="1"
-        android:layout_column="1"
-        android:width="100dp"
-        android:height="75dp"/>
-
     <Button
         android:text="PREV"
         android:id="@+id/prev"
@@ -43,7 +33,7 @@
         android:height="75dp"/>
 
     <Button
-        android:text="PLAY"
+        android:text="PLAY NOTE"
         android:id="@+id/play"
         android:width="100dp"
         android:height="75dp"/>
