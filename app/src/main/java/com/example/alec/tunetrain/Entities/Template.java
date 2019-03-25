@@ -4,6 +4,7 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.util.Log;
 
 @Entity(tableName = "Templates")
 public class Template {
@@ -86,7 +87,7 @@ public class Template {
     }
 
     private static String[] getNotesInScale(String[] notes, int noteIndex, Double[] intervals) {
-        String[] notesInScale = {};
+        String[] notesInScale = new String[intervals.length];
         int currentDegree = 0;
         for (int i = 0; i < intervals.length; i++) {
             if (noteIndex + currentDegree >= notes.length) {
@@ -102,7 +103,7 @@ public class Template {
     private static Template[] generateMajorTemplates() {
         String[] notes = {"A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab"};
         Double[] intervals = {1.0, 1.0, 0.5, 1.0, 1.0, 1.0, 0.5};
-        Template[] majorTemplates = {};
+        Template[] majorTemplates = new Template[12];
         String[] notesInScale;
         for (int i = 0; i < notes.length; i++) {
             notesInScale = getNotesInScale(notes, i, intervals);
@@ -117,7 +118,7 @@ public class Template {
     private static Template[] generateMinorTemplates() {
         String[] notes = {"A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab"};
         Double[] intervals = {1.0, 0.5, 1.0, 1.0, 0.5, 1.0, 1.0};
-        Template[] minorTemplates = {};
+        Template[] minorTemplates = new Template[12];
         String[] notesInScale;
         for (int i = 0; i < notes.length; i++) {
             notesInScale = getNotesInScale(notes, i, intervals);
@@ -130,9 +131,10 @@ public class Template {
     }
 
     private static Template[] generateBluesTemplates() {
+        Log.d("blues called", "THE FUNCTION WAS CALLED");
         String[] notes = {"A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab"};
         Double[] intervals = {1.5, 1.0, 0.5, 0.5, 1.5, 1.0};
-        Template[] bluesTemplates = {};
+        Template[] bluesTemplates = new Template[12];
         String[] notesInScale;
         for (int i = 0; i < notes.length; i++) {
             notesInScale = getNotesInScale(notes, i, intervals);
@@ -154,5 +156,12 @@ public class Template {
 
     public static Template[] populateBluesScales() {
         return generateBluesTemplates();
+    }
+
+    public static Template[] populateChromaticScale() {
+        return new Template[] {
+                new Template("Chromatic", "A", "Bb", "B", "C",
+                        "C#", "D", "Eb", "E", "F", "F#", "G", "Ab")
+        };
     }
 }

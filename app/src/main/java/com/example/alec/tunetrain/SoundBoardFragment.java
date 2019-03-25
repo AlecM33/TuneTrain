@@ -69,9 +69,30 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
         trainingMode = this.getArguments().getString("Mode");
         View v = inflater.inflate(R.layout.fragment_training, container, false);
         AppDatabase db = AppDatabase.getAppDatabase(getActivity().getBaseContext());
+        db.templateDao().insertAll(Template.populateChromaticScale());
+        db.templateDao().insertAll(Template.populateMajorScales());
+        db.templateDao().insertAll(Template.populateMinorScales());
+        db.templateDao().insertAll(Template.populateBluesScales());
+        db.noteDao().insertAll(Note.populateData());
 
         currentTemplate = db.templateDao().getTemplate("Chromatic");
+        List<Template> allTemplates = db.templateDao().getTemplates();
         List<Note> Notes = db.noteDao().getNotes();
+        for (Template template : allTemplates) {
+            Log.d(template.templateName, template.pad1);
+            Log.d(template.templateName, template.pad2);
+            Log.d(template.templateName, template.pad3);
+            Log.d(template.templateName, template.pad4);
+            Log.d(template.templateName, template.pad5);
+            Log.d(template.templateName, template.pad6);
+            Log.d(template.templateName, template.pad7);
+            Log.d(template.templateName, template.pad8);
+            Log.d(template.templateName, template.pad9);
+            Log.d(template.templateName, template.pad10);
+            Log.d(template.templateName, template.pad11);
+            Log.d(template.templateName, template.pad12);
+
+        }
 
         //set up onclick listeners for buttons
         mPads = new ArrayList<>();
