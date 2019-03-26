@@ -45,7 +45,7 @@ public class SpotifySession {
         AuthenticationRequest.Builder builder =
                 new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI);
 
-        builder.setScopes(new String[]{"streaming"});
+        builder.setScopes(new String[]{"streaming", "user-read-playback-state"});
         AuthenticationRequest request = builder.build();
 
         AuthenticationClient.openLoginActivity(this.mActivity, REQUEST_CODE, request);
@@ -115,7 +115,7 @@ public class SpotifySession {
     }
 
     private void connected() {
-        mSpotifyAppRemote.getPlayerApi().play("spotify:playlist:5g51BhC4yPIeyGzQBa2Oau");
+//        mSpotifyAppRemote.getPlayerApi().play("spotify:playlist:5g51BhC4yPIeyGzQBa2Oau");
         mSpotifyAppRemote.getPlayerApi()
                 .subscribeToPlayerState()
                 .setEventCallback(playerState -> {

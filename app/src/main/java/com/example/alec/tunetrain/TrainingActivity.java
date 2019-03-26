@@ -83,7 +83,6 @@ public class TrainingActivity extends AppCompatActivity implements TrainingModeD
     }
 
     public void loadSoundBoardFragment (String mode) {
-        //calling and displaying the stats Fragment
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);
         if (fragment == null) {

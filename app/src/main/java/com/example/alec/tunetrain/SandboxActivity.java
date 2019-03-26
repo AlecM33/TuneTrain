@@ -17,11 +17,13 @@ public class SandboxActivity extends AppCompatActivity {
     }
 
     public void loadSoundBoardFragment () {
-        //calling and displaying the stats Fragment
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);
         if (fragment == null) {
             fragment = new SoundBoardFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("Mode", "Sandbox");
+            fragment.setArguments(bundle);
             fm.beginTransaction()
                     .add(R.id.fragment_container, fragment)
                     .commit();

@@ -12,4 +12,18 @@
     <string name="spotify_mode">Spotify</string>
     <string name="note_mode">Note</string>
     <string name="template_list_title">Your Templates</string>
+
+    <!-- NOTE NAMES -->
+    <string name="Ab">Ab</string>
+    <string name="A">A</string>
+    <string name="Bb">Bb</string>
+    <string name="B">B</string>
+    <string name="C">C</string>
+    <string name="Cs">C#</string>
+    <string name="D">D</string>
+    <string name="Eb">Eb</string>
+    <string name="E">E</string>
+    <string name="F">F</string>
+    <string name="Fs">F#</string>
+
 </resources>

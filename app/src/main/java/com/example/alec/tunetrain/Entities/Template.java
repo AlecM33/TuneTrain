@@ -6,6 +6,8 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.util.Log;
 
+import java.util.HashMap;
+
 @Entity(tableName = "Templates")
 public class Template {
     @PrimaryKey(autoGenerate = true)
@@ -15,43 +17,43 @@ public class Template {
     public String templateName;
 
     @ColumnInfo(name = "pad1")
-    public String pad1;
+    public Note pad1;
 
     @ColumnInfo(name = "pad2")
-    public String pad2;
+    public Note pad2;
 
     @ColumnInfo(name = "pad3")
-    public String pad3;
+    public Note pad3;
 
     @ColumnInfo(name = "pad4")
-    public String pad4;
+    public Note pad4;
 
     @ColumnInfo(name = "pad5")
-    public String pad5;
+    public Note pad5;
 
     @ColumnInfo(name = "pad6")
-    public String pad6;
+    public Note pad6;
 
     @ColumnInfo(name = "pad7")
-    public String pad7;
+    public Note pad7;
 
     @ColumnInfo(name = "pad8")
-    public String pad8;
+    public Note pad8;
 
     @ColumnInfo(name = "pad9")
-    public String pad9;
+    public Note pad9;
 
     @ColumnInfo(name = "pad10")
-    public String pad10;
+    public Note pad10;
 
     @ColumnInfo(name = "pad11")
-    public String pad11;
+    public Note pad11;
 
     @ColumnInfo(name = "pad12")
-    public String pad12;
+    public Note pad12;
 
-    public Template(String templateName, String pad1, String pad2, String pad3, String pad4, String pad5, String pad6,
-                    String pad7, String pad8, String pad9, String pad10, String pad11, String pad12){
+    public Template(String templateName, Note pad1, Note pad2, Note pad3, Note pad4, Note pad5, Note pad6,
+                    Note pad7, Note pad8, Note pad9, Note pad10, Note pad11, Note pad12){
         this.templateName = templateName;
         this.pad1 = pad1;
         this.pad2 = pad2;
@@ -67,9 +69,29 @@ public class Template {
         this.pad12 = pad12;
     }
 
+    public Template(String templateName, String pad1, String pad2, String pad3, String pad4, String pad5, String pad6,
+                    String pad7, String pad8, String pad9, String pad10, String pad11, String pad12){
+        NoteFiles n = NoteFiles.getNoteFilesInstance();
+        HashMap<String, Integer> map = n.getMap();
+        this.templateName = templateName;
+        this.pad1 = new Note(pad1, map.get(pad1));
+        this.pad2 = new Note(pad2, map.get(pad2));
+        this.pad3 = new Note(pad3, map.get(pad3));
+        this.pad4 = new Note(pad4, map.get(pad4));
+        this.pad5 = new Note(pad5, map.get(pad5));
+        this.pad6 = new Note(pad6, map.get(pad6));
+        this.pad7 = new Note(pad7, map.get(pad7));
+        this.pad8 = new Note(pad8, map.get(pad8));
+        this.pad9 = new Note(pad9, map.get(pad9));
+        this.pad10 = new Note(pad10, map.get(pad10));
+        this.pad11 = new Note(pad11, map.get(pad11));
+        this.pad12 = new Note(pad12, map.get(pad12));
+
+    }
+
     @Ignore
-    public String[] getPads() {
-        String[] pads = {
+    public Note[] getPads() {
+        Note[] pads = {
                 this.pad1,
                 this.pad2,
                 this.pad3,

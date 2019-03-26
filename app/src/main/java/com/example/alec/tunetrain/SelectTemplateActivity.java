@@ -22,16 +22,16 @@ public class SelectTemplateActivity extends AppCompatActivity {
         allTemplates = db.templateDao().getTemplates();
         String[] templateNames = new String[allTemplates.size()];
         for (int x = 0; x < allTemplates.size(); x++) {
-            String templateString = allTemplates.get(x).templateName + "\n\n" + allTemplates.get(x).pad1 + "  "
-                    + allTemplates.get(x).pad2 + "  " + allTemplates.get(x).pad3 + "  " + allTemplates.get(x).pad4 +
-                    "  " + allTemplates.get(x).pad5 + "  " + allTemplates.get(x).pad6;
+            String templateString = allTemplates.get(x).templateName + "\n\n" + allTemplates.get(x).pad1.noteName + "  "
+                    + allTemplates.get(x).pad2.noteName + "  " + allTemplates.get(x).pad3.noteName + "  " + allTemplates.get(x).pad4.noteName +
+                    "  " + allTemplates.get(x).pad5.noteName + "  " + allTemplates.get(x).pad6.noteName;
             if (allTemplates.get(x).templateName.contains("Major") || allTemplates.get(x).templateName.contains("Minor")) {
-                templateString += "  " + allTemplates.get(x).pad7;
+                templateString += "  " + allTemplates.get(x).pad7.noteName;
             }
             if (allTemplates.get(x).templateName.contains("Chromatic")) {
-                templateString += "  " + allTemplates.get(x).pad7 + "  " + allTemplates.get(x).pad8
-                        + "  " + allTemplates.get(x).pad9 + "  " + allTemplates.get(x).pad10 + "  "
-                        + allTemplates.get(x).pad11 + "  " + allTemplates.get(x).pad12;
+                templateString += "  " + allTemplates.get(x).pad7.noteName + "  " + allTemplates.get(x).pad8.noteName
+                        + "  " + allTemplates.get(x).pad9.noteName + "  " + allTemplates.get(x).pad10.noteName + "  "
+                        + allTemplates.get(x).pad11.noteName + "  " + allTemplates.get(x).pad12.noteName;
             }
             templateNames[x] = templateString;
         }

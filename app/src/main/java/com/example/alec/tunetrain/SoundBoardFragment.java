@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.zip.Inflater;
 
 public class SoundBoardFragment extends Fragment implements View.OnClickListener  {
 
@@ -29,7 +30,7 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
     private static final int NUMBER_OF_PADS = 12;
     private SoundPool mSoundPool;
     private int sounds[] = new int[NUMBER_OF_PADS];
-    private String[] currentPads;
+    private Note[] currentPads;
     private String lastPlayed = "A";
     List<Template> allTemplates;
     private Button mPlayButton;
@@ -42,6 +43,8 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
     private Toast toast;
     private String trainingMode;
     private boolean buttonPressed;
+    private View v;
+    private AppDatabase db;
 
     private SpotifySession mSpotify;
     private static final int[] BUTTON_IDS = {
@@ -70,82 +73,18 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView(Inflater) called");
-        //trainingMode = this.getArguments().getString("Mode");
-        View v;
-        if (this.getClass().getSimpleName().equals("TrainingActivity")) {
-            v = inflater.inflate(R.layout.fragment_training, container, false);
-            mPlayButton = v.findViewById(R.id.play);
-            mPlayButton.setOnClickListener(this);
-            mNextButton = v.findViewById(R.id.next);
-            mNextButton.setOnClickListener(this);
-            toast = Toast.makeText(getActivity(), "CORRECT", Toast.LENGTH_SHORT);
+
+        //initialize db
+        this.db = AppDatabase.getAppDatabase(getActivity().getBaseContext());
+
+        this.trainingMode = this.getArguments().getString("Mode");
+        if (trainingMode.equals("Sandbox")) {
+            startSandboxMode(inflater, container);
         } else {
-            v = inflater.inflate(R.layout.fragment_sandbox, container, false);
-            mSelectButton = v.findViewById(R.id.select);
-            mSelectButton.setOnClickListener(this);
-            mCreateButton = v.findViewById(R.id.create);
-            mCreateButton.setOnClickListener(this);
-        }
-        AppDatabase db = AppDatabase.getAppDatabase(getActivity().getBaseContext());
-        if (db.templateDao().getTemplates().size() == 0) {
-            db.templateDao().insertAll(Template.populateChromaticScale());
-            db.templateDao().insertAll(Template.populateMajorScales());
-            db.templateDao().insertAll(Template.populateMinorScales());
-            db.templateDao().insertAll(Template.populateBluesScales());
-            db.noteDao().insertAll(Note.populateData());
+            startTrainingMode(inflater, container);
         }
 
-        currentTemplate = db.templateDao().getTemplate("Chromatic");
-        List<Note> Notes = db.noteDao().getNotes();
-
-        //set up onclick listeners for buttons
-        mPads = new ArrayList<>();
-        for(int id : BUTTON_IDS) {
-            Button button = v.findViewById(id);
-            button.setOnClickListener(this); // maybe
-            mPads.add(button);
-        }
-
-        //initialize soundpool
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mSoundPool = new SoundPool.Builder().setMaxStreams(5).build();
-        } else {
-            mSoundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
-        }
-
-        fileMap = Note.getFileMap(Notes);
-        currentPads = currentTemplate.getPads();
-
-        //load soundIDs
-        for (int i = 0; i < sounds.length; i++ ){
-            sounds[i] = mSoundPool.load(getActivity().getBaseContext(), fileMap.get(currentPads[i]), 1);
-        }
-
-        // DEBUG STUFF ----------------------------------------------
-
-//        Log.d(TAG, "CURRENT TEMP");
-//        for (int i = 0; i < currentTemplate.getPads().length; i++) {
-//            Log.d(TAG, currentTemplate.getPads()[i]);
-//        }
-//
-//        Log.d(TAG, "NOTES LIST");
-//        for (int i = 0; i < Notes.size(); i++) {
-//            Log.d(TAG, Notes.get(i).noteName);
-//        }
-//
-//        Log.d(TAG, "MAP");
-//        for (Map.Entry<String, Integer> entry : fileMap.entrySet()) {
-//            String key = entry.getKey();
-//            Integer value = entry.getValue();
-//            Log.d(TAG, key);
-//            Log.d(TAG, value.toString());
-//        }
-//
-//        Log.d(TAG, "CURRENT PADS LIST");
-//        for (int i = 0; i < currentPads.length; i++) {
-//            Log.d(TAG, currentPads[i]);
-//        }
-
+        setUpSoundPool();
 
         return v;
     }
@@ -182,77 +121,77 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
                 break;
             case R.id.pad1:
                 mSoundPool.play(sounds[0], 1, 1, 0, 0, 1);
-                lastPlayed = mPads.get(0).getText().toString();
+                lastPlayed = currentPads[0].noteName;
                 handleNotePress();
                 break;
 
             case R.id.pad2:
                 mSoundPool.play(sounds[1], 1, 1, 0, 0, 1);
-                lastPlayed = mPads.get(1).getText().toString();
+                lastPlayed = currentPads[1].noteName;
                 handleNotePress();
                 break;
 
             case R.id.pad3:
                 mSoundPool.play(sounds[2], 1, 1, 0, 0, 1);
-                lastPlayed = mPads.get(2).getText().toString();
+                lastPlayed = currentPads[2].noteName;
                 handleNotePress();
                 break;
 
             case R.id.pad4:
                 mSoundPool.play(sounds[3], 1, 1, 0, 0, 1);
-                lastPlayed = mPads.get(3).getText().toString();
+                lastPlayed = currentPads[3].noteName;
                 handleNotePress();
                 break;
 
             case R.id.pad5:
                 mSoundPool.play(sounds[4], 1, 1, 0, 0, 1);
-                lastPlayed = mPads.get(4).getText().toString();
+                lastPlayed = currentPads[4].noteName;
                 handleNotePress();
                 break;
 
             case R.id.pad6:
                 mSoundPool.play(sounds[5], 1, 1, 0, 0, 1);
-                lastPlayed = mPads.get(5).getText().toString();
+                lastPlayed = currentPads[5].noteName;
                 handleNotePress();
                 break;
 
             case R.id.pad7:
                 mSoundPool.play(sounds[6], 1, 1, 0, 0, 1);
-                lastPlayed = mPads.get(6).getText().toString();
+                lastPlayed = currentPads[6].noteName;
                 handleNotePress();
                 break;
 
             case R.id.pad8:
                 mSoundPool.play(sounds[7], 1, 1, 0, 0, 1);
-                lastPlayed = mPads.get(7).getText().toString();
+                lastPlayed = currentPads[7].noteName;
                 handleNotePress();
 
                 break;
 
             case R.id.pad9:
                 mSoundPool.play(sounds[8], 1, 1, 0, 0, 1);
-                lastPlayed = mPads.get(8).getText().toString();
+                lastPlayed = currentPads[8].noteName;
                 handleNotePress();
 
                 break;
 
             case R.id.pad10:
                 mSoundPool.play(sounds[9], 1, 1, 0, 0, 1);
-                lastPlayed = mPads.get(9).getText().toString();
+                lastPlayed = currentPads[9].noteName;
                 handleNotePress();
 
                 break;
 
             case R.id.pad11:
                 mSoundPool.play(sounds[10], 1, 1, 0, 0, 1);
-                lastPlayed = mPads.get(10).getText().toString();
+                lastPlayed = currentPads[10].noteName;
                 handleNotePress();
 
                 break;
 
             case R.id.pad12:
                 mSoundPool.play(sounds[11], 1, 1, 0, 0, 2);
-                lastPlayed = mPads.get(11).getText().toString();
+                lastPlayed = currentPads[11].noteName;
                 handleNotePress();
 
                 break;
@@ -260,15 +199,88 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
 
     }
 
+    private void startSandboxMode(LayoutInflater inflater, ViewGroup container) {
+        v = inflater.inflate(R.layout.fragment_sandbox, container, false);
+        mSelectButton = v.findViewById(R.id.select);
+        mSelectButton.setOnClickListener(this);
+        mCreateButton = v.findViewById(R.id.create);
+        mCreateButton.setOnClickListener(this);
+
+        currentTemplate = db.templateDao().getTemplate("C Major");
+        currentPads = currentTemplate.getPads();
+
+        setOnClickListeners();
+    }
+
+    private void startTrainingMode(LayoutInflater inflater, ViewGroup container) {
+        v = inflater.inflate(R.layout.fragment_training, container, false);
+        mPlayButton = v.findViewById(R.id.play);
+        mPlayButton.setOnClickListener(this);
+        mNextButton = v.findViewById(R.id.next);
+        mNextButton.setOnClickListener(this);
+        toast = Toast.makeText(getActivity(), "CORRECT", Toast.LENGTH_SHORT);
+
+        currentTemplate = db.templateDao().getTemplate("Chromatic");
+        currentPads = currentTemplate.getPads();
+
+        setOnClickListeners();
+
+
+        if (this.trainingMode.equals("Spotify")) {
+            startSpotifyMode();
+        } else {
+            startNoteMode();
+        }
+    }
+
+    private void startNoteMode() {
+
+    }
+
+    private void startSpotifyMode() {
+
+    }
+
+    private void setUpSoundPool() {
+        //initialize soundpool
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mSoundPool = new SoundPool.Builder().setMaxStreams(5).build();
+        } else {
+            mSoundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
+        }
+
+
+        //load soundIDs
+        for (int i = 0; i < sounds.length; i++ ){
+            if (!currentPads[i].noteName.equals("none")) {
+                sounds[i] = mSoundPool.load(getActivity().getBaseContext(), currentPads[i].fileName, 1);
+            }
+        }
+    }
+
+    private void setOnClickListeners() {
+        //set up onclick listeners for buttons
+        Note[] pads = currentTemplate.getPads();
+        for(int i = 0; i <BUTTON_IDS.length; i++) {
+            Button button = v.findViewById(BUTTON_IDS[i]);
+            if (pads[i].noteName.equals("none")) {
+                button.setVisibility(View.INVISIBLE);
+            } else {
+                button.setOnClickListener(this); // maybe
+                button.setText(pads[i].noteName);
+            }
+
+        }
+    }
     public void playNextNote() {
         rIndex = r.nextInt(currentPads.length);
-        randomNote = currentPads[rIndex];
+        randomNote = currentPads[rIndex].noteName;
         mSoundPool.play(sounds[rIndex], 1, 1, 0, 0, 1);
 
     }
 
     public void handleNotePress() {
-        if (this.getClass().getSimpleName().equals("TrainingActivity")) {
+        if (trainingMode.equals("Note") || trainingMode.equals("Spotify")) {
             if (lastPlayed.equals(randomNote)) {
                 Log.d(TAG, "CORRECT");
                 toast.setText("CORRECT");
@@ -280,5 +292,7 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
                 Log.d(TAG, "INCORRECT");
             }
         }
+
     }
+
 }
