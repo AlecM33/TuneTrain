@@ -3,6 +3,7 @@ package com.example.alec.tunetrain;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,11 +16,10 @@ import android.widget.Toast;
 import com.example.alec.tunetrain.Entities.Note;
 import com.example.alec.tunetrain.Entities.Template;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-import java.util.zip.Inflater;
+import java.util.concurrent.ExecutionException;
 
 public class SoundBoardFragment extends Fragment implements View.OnClickListener  {
 
@@ -206,10 +206,31 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
         mCreateButton = v.findViewById(R.id.create);
         mCreateButton.setOnClickListener(this);
 
-        currentTemplate = db.templateDao().getTemplate("C Major");
-        currentPads = currentTemplate.getPads();
+        GetCurrentTemplateTask templateTask = new GetCurrentTemplateTask();
+        try {
+            currentPads = templateTask.execute().get().getPads();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         setOnClickListeners();
+    }
+
+    private class GetCurrentTemplateTask extends AsyncTask<Void, Void, Template> {
+        Template currentTemplate;
+
+        @Override
+        protected Template doInBackground(Void... params) {
+           return db.templateDao().getTemplate("C Major");
+        }
+
+        protected void onProgressUpdate() {
+        }
+
+        protected void onPostExecute() {
+        }
     }
 
     private void startTrainingMode(LayoutInflater inflater, ViewGroup container) {
@@ -221,7 +242,14 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
         toast = Toast.makeText(getActivity(), "CORRECT", Toast.LENGTH_SHORT);
 
         currentTemplate = db.templateDao().getTemplate("Chromatic");
-        currentPads = currentTemplate.getPads();
+        GetCurrentTemplateTask templateTask = new GetCurrentTemplateTask();
+        try {
+            currentPads = templateTask.execute().get().getPads();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         setOnClickListeners();
 
@@ -260,14 +288,13 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
 
     private void setOnClickListeners() {
         //set up onclick listeners for buttons
-        Note[] pads = currentTemplate.getPads();
         for(int i = 0; i <BUTTON_IDS.length; i++) {
             Button button = v.findViewById(BUTTON_IDS[i]);
-            if (pads[i].noteName.equals("none")) {
+            if (currentPads[i].noteName.equals("none")) {
                 button.setVisibility(View.INVISIBLE);
             } else {
                 button.setOnClickListener(this); // maybe
-                button.setText(pads[i].noteName);
+                button.setText(currentPads[i].noteName);
             }
 
         }
