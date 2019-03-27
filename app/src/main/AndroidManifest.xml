@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SelectTemplateActivity"></activity>
+        <activity android:name=".SelectTemplateActivity"
+            android:parentActivityName="com.example.alec.tunetrain.SandboxActivity" />
         <activity android:name=".LandingPageActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
