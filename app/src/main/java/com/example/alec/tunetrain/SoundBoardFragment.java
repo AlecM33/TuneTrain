@@ -37,6 +37,7 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
     private Button mNextButton;
     private Button mSelectButton;
     private Button mCreateButton;
+    private Button mPrevButton;
     private Random r = new Random();
     private int rIndex =  0;
     private String randomNote = "";
@@ -45,6 +46,7 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
     private boolean buttonPressed;
     private View v;
     private AppDatabase db;
+    private boolean GameStart = false;
 
     private SpotifySession mSpotify;
     private static final int[] BUTTON_IDS = {
@@ -104,20 +106,25 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-//        Log.d(TAG, lastPlayed);
         buttonPressed = true;
         switch (v.getId()){
             case R.id.select:
                 Intent intent = new Intent(getActivity(), SelectTemplateActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.prev:
+                mSpotify.prevTrack();
             case R.id.play:
+                GameStart = true;
                 mPlayButton.setEnabled(false);
-                playNextNote();
+                if (this.trainingMode.equals("Spotify")) {
+                    mSpotify.play();
+                } else {
+                    playNextNote();
+                }
                  break;
             case R.id.next:
-                mNextButton.setEnabled(false);
-                playNextNote();
+                mSpotify.nextTrack();
                 break;
             case R.id.pad1:
                 mSoundPool.play(sounds[0], 1, 1, 0, 0, 1);
@@ -218,6 +225,8 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
         mPlayButton.setOnClickListener(this);
         mNextButton = v.findViewById(R.id.next);
         mNextButton.setOnClickListener(this);
+        mPrevButton = v.findViewById(R.id.prev);
+        mPrevButton.setOnClickListener(this);
         toast = Toast.makeText(getActivity(), "CORRECT", Toast.LENGTH_SHORT);
 
         currentTemplate = db.templateDao().getTemplate("Chromatic");
@@ -234,10 +243,17 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
     }
 
     private void startNoteMode() {
+        mPrevButton.setEnabled(false);
+        mNextButton.setEnabled(false);
 
     }
 
     private void startSpotifyMode() {
+//        this.authToken = this.getArguments().getString("TOKEN");
+        mSpotify = SpotifySession.getSpotifyInstance(getActivity());
+        mSpotify.setUpWebApi();
+
+
 
     }
 
@@ -280,7 +296,7 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
     }
 
     public void handleNotePress() {
-        if (trainingMode.equals("Note") || trainingMode.equals("Spotify")) {
+        if ((trainingMode.equals("Note") || trainingMode.equals("Spotify")) && GameStart) {
             if (lastPlayed.equals(randomNote)) {
                 Log.d(TAG, "CORRECT");
                 toast.setText("CORRECT");

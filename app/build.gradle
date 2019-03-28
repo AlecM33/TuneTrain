@@ -34,6 +34,7 @@ android {
 
 repositories {
     mavenCentral()
+    maven { url "https://jitpack.io" }
     flatDir {
         dirs 'libs'
     }
@@ -60,4 +61,9 @@ dependencies {
     implementation project(':spotify-app-remote')
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.spotify.android:auth:1.0.0-alpha'
+    implementation 'com.mcxiaoke.volley:library-aar:1.0.1'
+//    implementation 'com.github.kaaes:spotify-web-api-android:0.4.1'
+    implementation 'com.github.ericcparsons:spotify-web-api-android:0.4.2'
+
+
 }
