@@ -116,6 +116,7 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
         switch (v.getId()){
             case R.id.select:
                 Intent intent = new Intent(getActivity(), SelectTemplateActivity.class);
+                intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(intent);
                 break;
             case R.id.play:

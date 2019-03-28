@@ -42,6 +42,7 @@ public class SelectTemplateActivity extends AppCompatActivity {
 
     private void setNewCurrentTemplate(String newTemplateName) {
         Intent data = new Intent(SelectTemplateActivity.this, SandboxActivity.class);
+        data.setFlags(data.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
         data.putExtra("newTemplate", newTemplateName);
         setResult(RESULT_OK, data);
         startActivity(data);
