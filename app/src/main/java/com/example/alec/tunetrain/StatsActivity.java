@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.example.alec.tunetrain.Entities.Guess;
 import com.example.alec.tunetrain.Entities.Template;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
@@ -21,6 +22,7 @@ public class StatsActivity extends AppCompatActivity {
     private static final String TAG = "StatsActivity";
     private List<Guess> allGuesses;
     public TextView mCorrectPercentage;
+    public TextView mGuessesNeeded;
     public AppDatabase db;
 
     @Override
@@ -32,6 +34,7 @@ public class StatsActivity extends AppCompatActivity {
         db = AppDatabase.getAppDatabase(this.getBaseContext());
         StatsActivity.GetStatTask statTask = new StatsActivity.GetStatTask();
         mCorrectPercentage = (TextView)findViewById(R.id.percent_correct);
+        mGuessesNeeded = (TextView)findViewById(R.id.guesses_needed);
         // TODO: Refactor
         try {
             allGuesses = statTask.execute().get();
@@ -41,10 +44,13 @@ public class StatsActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         if (allGuesses.size() > 0) {
-            double correctPercentage = calculateCorrectPercentage(allGuesses);
+            double averageGuessesNeeded = calculateAverageGuessedNeeded(allGuesses);
+            double correctPercentage = (1 / averageGuessesNeeded) * 100;
             mCorrectPercentage.setText(String.format(Locale.getDefault(), "%.2f%%", correctPercentage));
+            mGuessesNeeded.setText(String.format(Locale.getDefault(), "%.2f", averageGuessesNeeded));
         } else {
-            mCorrectPercentage.setText(R.string.correct_percentage_no_guesses);
+            mCorrectPercentage.setText(R.string.no_guesses);
+            mGuessesNeeded.setText(R.string.no_guesses);
         }
     }
 
@@ -64,18 +70,28 @@ public class StatsActivity extends AppCompatActivity {
         }
     }
 
-
-    private static double calculateCorrectPercentage(List<Guess> allGuesses) {
-        double correct = 0;
-        double incorrect = 0;
-        for (Guess guess : allGuesses) {
-            if(guess.correct) {
-                correct ++;
-            } else {
-                incorrect++;
+    private static double calculateAverageGuessedNeeded(List<Guess> allGuesses) {
+        int current = 0;
+        List<Integer> guessesNeeded = new ArrayList<>();
+        while (current < allGuesses.size()) {
+            int incorrectStreak = 0;
+            while(!allGuesses.get(current).correct) {
+                incorrectStreak++;
+                current++;
             }
+            current++;
+            guessesNeeded.add(incorrectStreak + 1);
         }
-        return correct / (correct + incorrect) * 100;
+        int total = 0;
+        for (int streak : guessesNeeded) {
+            total += streak;
+        }
+        return (double)total / guessesNeeded.size();
+    }
+
+    //TODO: implement using notesPlayedDao
+    private static String calculateFavoriteNote(List<Guess> allGuesses) {
+        return "";
     }
 
     @Override

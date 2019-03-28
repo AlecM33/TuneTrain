@@ -91,6 +91,7 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
         if (trainingMode.equals("Sandbox")) {
             startSandboxMode(inflater, container);
         } else {
+            currentPads = db.templateDao().getTemplate("Chromatic").getPads();
             startTrainingMode(inflater, container);
         }
 
@@ -220,9 +221,11 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
         GetCurrentTemplateTask templateTask = new GetCurrentTemplateTask();
         try {
             if(this.templateName != null) {
-                currentPads = templateTask.execute(this.templateName).get().getPads();
+                Template result = templateTask.execute(this.templateName).get();
+                currentPads = result.getPads();
             } else {
-                currentPads = templateTask.execute("C Major").get().getPads();
+                Template result = templateTask.execute("C Major").get();
+                currentPads = result.getPads();
             }
         } catch (ExecutionException e) {
             e.printStackTrace();
@@ -256,17 +259,7 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
         mNextButton.setOnClickListener(this);
         toast = Toast.makeText(getActivity(), "CORRECT", Toast.LENGTH_SHORT);
 
-        GetCurrentTemplateTask templateTask = new GetCurrentTemplateTask();
-        try {
-            currentPads = templateTask.execute("Chromatic").get().getPads();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         setOnClickListeners();
-
 
         if (this.trainingMode.equals("Spotify")) {
             startSpotifyMode();
