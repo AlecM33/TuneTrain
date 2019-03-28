@@ -19,11 +19,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".StatsActivity" />
-        <activity android:name=".TrainingActivity" />
+        <activity android:name=".TrainingActivity"
+            android:parentActivityName="com.example.alec.tunetrain.LandingPageActivity" />
         <activity
             android:name=".SandboxActivity"
             android:label="@string/title_activity_sandbox"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName="com.example.alec.tunetrain.LandingPageActivity" />
         <activity
             android:name="com.spotify.sdk.android.authentication.LoginActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />

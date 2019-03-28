@@ -1,5 +1,6 @@
 package com.example.alec.tunetrain;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.SoundPool;
@@ -23,6 +24,7 @@ import java.util.concurrent.ExecutionException;
 
 public class SoundBoardFragment extends Fragment implements View.OnClickListener  {
 
+    private static final int REQUEST_CODE_SELECT_TEMPLATE = 0;
     private static final String TAG = "SoundBoardFragment";
     private List<Button> mPads;
     private HashMap<String, Integer> fileMap;
@@ -37,6 +39,7 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
     private Button mNextButton;
     private Button mSelectButton;
     private Button mCreateButton;
+    private String templateName;
     private Random r = new Random();
     private int rIndex =  0;
     private String randomNote = "";
@@ -78,6 +81,10 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
         this.db = AppDatabase.getAppDatabase(getActivity().getBaseContext());
 
         this.trainingMode = this.getArguments().getString("Mode");
+        this.templateName = this.getArguments().getString("templateName");
+        if (this.templateName != null) {
+            Log.d("new name", this.templateName);
+        }
         if (trainingMode.equals("Sandbox")) {
             startSandboxMode(inflater, container);
         } else {
@@ -208,7 +215,11 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
 
         GetCurrentTemplateTask templateTask = new GetCurrentTemplateTask();
         try {
-            currentPads = templateTask.execute().get().getPads();
+            if(this.templateName != null) {
+                currentPads = templateTask.execute(this.templateName).get().getPads();
+            } else {
+                currentPads = templateTask.execute("C Major").get().getPads();
+            }
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -218,12 +229,12 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
         setOnClickListeners();
     }
 
-    private class GetCurrentTemplateTask extends AsyncTask<Void, Void, Template> {
+    private class GetCurrentTemplateTask extends AsyncTask<String, Void, Template> {
         Template currentTemplate;
 
         @Override
-        protected Template doInBackground(Void... params) {
-           return db.templateDao().getTemplate("C Major");
+        protected Template doInBackground(String... name) {
+           return db.templateDao().getTemplate(name[0]);
         }
 
         protected void onProgressUpdate() {
@@ -241,10 +252,9 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
         mNextButton.setOnClickListener(this);
         toast = Toast.makeText(getActivity(), "CORRECT", Toast.LENGTH_SHORT);
 
-        currentTemplate = db.templateDao().getTemplate("Chromatic");
         GetCurrentTemplateTask templateTask = new GetCurrentTemplateTask();
         try {
-            currentPads = templateTask.execute().get().getPads();
+            currentPads = templateTask.execute("Chromatic").get().getPads();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

@@ -1,7 +1,11 @@
 package com.example.alec.tunetrain;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -27,5 +31,19 @@ public class SelectTemplateActivity extends AppCompatActivity {
         ArrayAdapter adapter = new ArrayAdapter<String>(this,R.layout.activity_templatelist,templateNames);
         ListView listView = (ListView) findViewById(R.id.template_list);
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("template list selection", templateNames[position]);
+                setNewCurrentTemplate(templateNames[position]);
+            }
+        });
+    }
+
+    private void setNewCurrentTemplate(String newTemplateName) {
+        Intent data = new Intent(SelectTemplateActivity.this, SandboxActivity.class);
+        data.putExtra("newTemplate", newTemplateName);
+        setResult(RESULT_OK, data);
+        startActivity(data);
     }
 }
