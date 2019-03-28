@@ -12,6 +12,7 @@
     <string name="spotify_mode">Spotify</string>
     <string name="note_mode">Note</string>
     <string name="template_list_title">Your Templates</string>
+    <string name="correct_percentage_no_guesses">You haven\'t made any guesses.</string>
 
     <!-- NOTE NAMES -->
     <string name="Ab">Ab</string>

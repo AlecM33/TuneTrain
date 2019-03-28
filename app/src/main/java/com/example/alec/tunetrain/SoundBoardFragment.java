@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.example.alec.tunetrain.Entities.Guess;
 import com.example.alec.tunetrain.Entities.Note;
 import com.example.alec.tunetrain.Entities.Template;
 
@@ -37,6 +39,7 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
     List<Template> allTemplates;
     private Button mPlayButton;
     private Button mNextButton;
+    private boolean startOfSession;
     private Button mSelectButton;
     private Button mCreateButton;
     private String templateName;
@@ -320,15 +323,20 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
     public void handleNotePress() {
         if (trainingMode.equals("Note") || trainingMode.equals("Spotify")) {
             if (lastPlayed.equals(randomNote)) {
+                db.guessDao().insert(new Guess("training", true, this.startOfSession));
                 Log.d(TAG, "CORRECT");
                 toast.setText("CORRECT");
                 toast.show();
                 mPlayButton.setEnabled(true);
             } else {
+                db.guessDao().insert(new Guess("training", false, this.startOfSession));
                 toast.setText("INCORRECT, TRY AGAIN");
                 toast.show();
                 Log.d(TAG, "INCORRECT");
             }
+        }
+        if (this.startOfSession) {
+            this.startOfSession = false;
         }
 
     }
