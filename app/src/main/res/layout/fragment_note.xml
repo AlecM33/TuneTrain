@@ -1,0 +1,109 @@
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="50dp"
+        android:orientation="vertical">
+
+        <Button
+            android:text="PLAY NOTE"
+            android:textSize="12dp"
+            android:id="@+id/play"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:text="NEXT"
+            android:id="@+id/next"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+
+    </LinearLayout>
+
+
+
+    <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:columnCount="3"
+        android:orientation="horizontal">
+
+        <Button android:text="A"
+            android:id="@+id/pad1"
+            android:width="100dp"
+            android:height="75dp"/>
+
+        <Button
+            android:text="Bb"
+            android:id="@+id/pad2"
+            android:width="100dp"
+            android:height="75dp"/>
+
+        <Button
+            android:text="B"
+            android:id="@+id/pad3"
+            android:width="100dp"
+            android:height="75dp"/>
+
+        <Button
+            android:text="C"
+            android:id="@+id/pad4"
+            android:width="100dp"
+            android:height="75dp" />
+
+        <Button
+            android:text="C#"
+            android:id="@+id/pad5"
+            android:width="100dp"
+            android:height="75dp" />
+
+        <Button
+            android:text="D"
+            android:id="@+id/pad6"
+            android:width="100dp"
+            android:height="75dp" />
+
+        <Button
+            android:text="Eb"
+            android:id="@+id/pad7"
+            android:width="100dp"
+            android:height="75dp" />
+
+        <Button
+            android:text="E"
+            android:id="@+id/pad8"
+            android:width="100dp"
+            android:height="75dp" />
+
+        <Button android:text="F"
+            android:id="@+id/pad9"
+            android:width="100dp"
+            android:height="75dp"/>
+
+        <Button android:text="F#"
+            android:id="@+id/pad10"
+            android:width="100dp"
+            android:height="75dp"/>
+
+        <Button android:text="G"
+            android:id="@+id/pad11"
+            android:width="100dp"
+            android:height="75dp"/>
+
+        <Button android:text="Ab"
+            android:id="@+id/pad12"
+            android:width="100dp"
+            android:height="75dp"/>
+
+    </GridLayout>
+
+</LinearLayout>
