@@ -8,23 +8,24 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp">
 
         <Button
-            android:text="Select Template"
             android:id="@+id/select"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:width="160dp"
             android:height="50dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:text="Select Template" />
+
         <Button
-            android:text="Add Template"
             android:id="@+id/create"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:width="160dp"
             android:height="50dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:text="Add Template" />
     </LinearLayout>
     <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"

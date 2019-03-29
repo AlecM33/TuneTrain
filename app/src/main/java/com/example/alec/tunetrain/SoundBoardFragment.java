@@ -269,15 +269,22 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
     }
 
     private void startTrainingMode(LayoutInflater inflater, ViewGroup container) {
-        getActivity().setTitle("TuneTrain - " + trainingMode + " Training");
         if (this.trainingMode.equals("Spotify")) {
             v = inflater.inflate(R.layout.fragment_spotify, container, false);
-            setOnClickListeners();
-            startSpotifyMode();
         } else {
             v = inflater.inflate(R.layout.fragment_note, container, false);
-            setOnClickListeners();
+        }
+        getActivity().setTitle("TuneTrain - " + trainingMode + " Training");
+        mPlayButton = v.findViewById(R.id.play);
+        mPlayButton.setOnClickListener(this);
 
+        mNextButton = v.findViewById(R.id.next);
+        mNextButton.setOnClickListener(this);
+        mNextButton.setEnabled(false);
+        setOnClickListeners();
+
+        if (this.trainingMode.equals("Spotify")) {
+            startSpotifyMode();
         }
         toast = Toast.makeText(getActivity(), "CORRECT", Toast.LENGTH_SHORT);
 
@@ -353,13 +360,6 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
     }
 
     private void setOnClickListeners() {
-        mPlayButton = v.findViewById(R.id.play);
-        mPlayButton.setOnClickListener(this);
-
-        mNextButton = v.findViewById(R.id.next);
-        mNextButton.setOnClickListener(this);
-        mNextButton.setEnabled(false);
-
         //set up onclick listeners for buttons
         for(int i = 0; i <BUTTON_IDS.length; i++) {
             Button button = v.findViewById(BUTTON_IDS[i]);
