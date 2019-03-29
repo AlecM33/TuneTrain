@@ -1,7 +1,11 @@
 package com.example.alec.tunetrain;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -22,21 +26,25 @@ public class SelectTemplateActivity extends AppCompatActivity {
         allTemplates = db.templateDao().getTemplates();
         String[] templateNames = new String[allTemplates.size()];
         for (int x = 0; x < allTemplates.size(); x++) {
-            String templateString = allTemplates.get(x).templateName + "\n\n" + allTemplates.get(x).pad1.noteName + "  "
-                    + allTemplates.get(x).pad2.noteName + "  " + allTemplates.get(x).pad3.noteName + "  " + allTemplates.get(x).pad4.noteName +
-                    "  " + allTemplates.get(x).pad5.noteName + "  " + allTemplates.get(x).pad6.noteName;
-            if (allTemplates.get(x).templateName.contains("Major") || allTemplates.get(x).templateName.contains("Minor")) {
-                templateString += "  " + allTemplates.get(x).pad7.noteName;
-            }
-            if (allTemplates.get(x).templateName.contains("Chromatic")) {
-                templateString += "  " + allTemplates.get(x).pad7.noteName + "  " + allTemplates.get(x).pad8.noteName
-                        + "  " + allTemplates.get(x).pad9.noteName + "  " + allTemplates.get(x).pad10.noteName + "  "
-                        + allTemplates.get(x).pad11.noteName + "  " + allTemplates.get(x).pad12.noteName;
-            }
-            templateNames[x] = templateString;
+            templateNames[x] = allTemplates.get(x).templateName;
         }
         ArrayAdapter adapter = new ArrayAdapter<String>(this,R.layout.activity_templatelist,templateNames);
         ListView listView = (ListView) findViewById(R.id.template_list);
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("template list selection", templateNames[position]);
+                setNewCurrentTemplate(templateNames[position]);
+            }
+        });
+    }
+
+    private void setNewCurrentTemplate(String newTemplateName) {
+        Intent data = new Intent(SelectTemplateActivity.this, SandboxActivity.class);
+        data.setFlags(data.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+        data.putExtra("newTemplate", newTemplateName);
+        setResult(RESULT_OK, data);
+        startActivity(data);
     }
 }

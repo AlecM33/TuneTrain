@@ -183,7 +183,7 @@ public class Template {
     public static Template[] populateChromaticScale() {
         return new Template[] {
                 new Template("Chromatic", "A", "Bb", "B", "C",
-                        "C#", "D", "Eb", "E", "F", "F#", "G", "Ab")
+                        "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab")
         };
     }
 }

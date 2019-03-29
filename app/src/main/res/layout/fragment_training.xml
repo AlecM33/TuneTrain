@@ -1,3 +1,30 @@
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="50dp"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/playlist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SELECT PLAYLIST" />
+
+        <Spinner
+            android:id="@+id/playlist_spinner"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible" />
+
+    </LinearLayout>
+
 <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -15,6 +42,7 @@
 
     <Button
         android:text="PLAY NOTE"
+        android:textSize="12dp"
         android:id="@+id/play"
         android:width="100dp"
         android:height="75dp"/>
@@ -94,3 +122,4 @@
 
 </GridLayout>
 
+</LinearLayout>

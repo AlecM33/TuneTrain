@@ -42,6 +42,7 @@ public class LandingPageActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Start StatsActivity
                 Intent intent = new Intent(LandingPageActivity.this, TrainingActivity.class);
+                intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(intent);
             }
         });
@@ -52,6 +53,7 @@ public class LandingPageActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Start SandboxActivity
                 Intent intent = new Intent(LandingPageActivity.this, SandboxActivity.class);
+                intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(intent);
             }
         });

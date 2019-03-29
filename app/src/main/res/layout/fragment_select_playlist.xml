@@ -8,6 +8,13 @@
         style="?android:listSeparatorTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/stats_title"/>
+        android:text="@string/playlist_list_title"/>
+
+    <ListView
+        android:id="@+id/playlist_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </ListView>
+
 
 </LinearLayout>
