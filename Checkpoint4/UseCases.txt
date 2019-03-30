@@ -1,0 +1,7 @@
+Sandbox Mode -> View Pad Interface -> Play Pads
+Sandbox Mode -> View Pad Interface -> Select Template -> Select From List of Templates -> Pad Interface Updates
+
+Training Mode -> User Selects Note Mode -> Loads Note View -> Play Note Game
+Training Mode -> User Selects Spotify Mode -> Loads Spotify View -> User Selects Playlist -> Play Spotify Game
+
+Stats Mode -> User View Statistics 
