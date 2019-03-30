@@ -20,8 +20,8 @@ public class TrainingActivity extends AppCompatActivity implements TrainingModeD
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_training);
 
-        //display dialog for selection training mode
-        showNoticeDialog();
+        //display dialog for training mode selection
+        showModeSelectionDialog();
 
     }
 
@@ -29,6 +29,8 @@ public class TrainingActivity extends AppCompatActivity implements TrainingModeD
     public void onStart() {
         super.onStart();
         Log.d(TAG, "onStart() called");
+
+        //First initial Spotify authorization through Spotify SDK Single-Sign On
         mSpotify = SpotifySession.getSpotifyInstance(this);
 
     }
@@ -54,7 +56,8 @@ public class TrainingActivity extends AppCompatActivity implements TrainingModeD
     }
 
 
-    public void showNoticeDialog() {
+    //Dialog that initially displays for Training Mode selection (Note or Spotify)
+    public void showModeSelectionDialog() {
         // Create an instance of the dialog fragment and show it
         DialogFragment dialog = new TrainingModeDialogFragment();
         dialog.show(this.getSupportFragmentManager().beginTransaction(), "TrainingModeDialogFragment");
@@ -62,10 +65,10 @@ public class TrainingActivity extends AppCompatActivity implements TrainingModeD
 
     // The dialog fragment receives a reference to this Activity through the
     // Fragment.onAttach() callback, which it uses to call the following methods
-    // defined by the TrainingDialogFragment.TrainingDialogListener interface
+    // defined by the TrainingModeDialogFragment.TrainingModeDialogListener interface
     @Override
     public void onDialogSpotifyClick(DialogFragment dialog) {
-        // User touched the dialog's positive button
+        // User touched the dialog's Spotify button
         this.trainingMode = "Spotify";
         Log.d(TAG, "TRAINING MODE: " + trainingMode);
         loadSoundBoardFragment(trainingMode);
@@ -74,7 +77,7 @@ public class TrainingActivity extends AppCompatActivity implements TrainingModeD
 
     @Override
     public void onDialogNoteClick(DialogFragment dialog) {
-        // User touched the dialog's negative button
+        // User touched the dialog's Note button
         this.trainingMode = "Note";
         Log.d(TAG, "TRAINING MODE: " + trainingMode);
         loadSoundBoardFragment(trainingMode);
@@ -82,6 +85,7 @@ public class TrainingActivity extends AppCompatActivity implements TrainingModeD
 
     }
 
+    //Load the sound board fragment, sending the correct User specified Training mode
     public void loadSoundBoardFragment (String mode) {
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);
@@ -89,13 +93,13 @@ public class TrainingActivity extends AppCompatActivity implements TrainingModeD
             fragment = new SoundBoardFragment();
             Bundle bundle = new Bundle();
             bundle.putString("Mode", trainingMode);
-            bundle.putString("TOKEN", mSpotify.getToken());
             fragment.setArguments(bundle);
             fm.beginTransaction()
                     .add(R.id.fragment_container, fragment)
                     .commit();
         }
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {

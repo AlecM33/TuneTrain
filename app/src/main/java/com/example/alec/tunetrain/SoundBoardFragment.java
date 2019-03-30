@@ -32,29 +32,37 @@ import kaaes.spotify.webapi.android.models.PlaylistSimple;
 public class SoundBoardFragment extends Fragment implements View.OnClickListener  {
 
     private static final String TAG = "SoundBoardFragment";
-    private HashMap<String, Integer> fileMap;
     private static final int NUMBER_OF_PADS = 12;
+
     private SoundPool mSoundPool;
     private int sounds[] = new int[NUMBER_OF_PADS];
     private Note[] currentPads;
+
+    private View v;
+    private AppDatabase db;
+
+    private Random r = new Random();
+    private int rIndex =  0;
+
+    private boolean startOfSession;
+    private boolean GameStart = false;
+    private boolean isPlaying;
+
+    private String templateName;
     private String lastPlayed = "A";
+    private String randomNote = "";
+    private String trainingMode;
+
+    //buttons
     private Button mPlayButton;
     private Button mNextButton;
-    private boolean startOfSession;
     private Button mSelectButton;
     private Button mCreateButton;
     private Button mPlaylistButton;
     private Button mPrevButton;
-    private String templateName;
-    private Random r = new Random();
-    private int rIndex =  0;
-    private String randomNote = "";
+
     private Toast toast;
-    private String trainingMode;
-    private View v;
-    private AppDatabase db;
-    private boolean GameStart = false;
-    private boolean isPlaying;
+
 
     private SpotifySession mSpotify;
     private static final int[] BUTTON_IDS = {
@@ -87,11 +95,15 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
         //initialize db
         this.db = AppDatabase.getAppDatabase(getActivity().getBaseContext());
 
+        //get intended the mode of the soundboard
         this.trainingMode = this.getArguments().getString("Mode");
         this.templateName = this.getArguments().getString("templateName");
+
         if (this.templateName != null) {
             Log.d("new name", this.templateName);
         }
+
+        //based on the mode start either Sandbox or Training
         if (trainingMode.equals("Sandbox")) {
             startSandboxMode(inflater, container);
         } else {
@@ -99,6 +111,7 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
             startTrainingMode(inflater, container);
         }
 
+        //soundpool for synth pads
         setUpSoundPool();
 
         return v;
@@ -107,6 +120,7 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
     @Override
     public void onStart() {
         super.onStart();
+        //start up the spotify authentication
         mSpotify = SpotifySession.getSpotifyInstance(getActivity());
         mSpotify.connect();
     }
@@ -114,6 +128,8 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
     @Override
     public void onStop() {
         super.onStop();
+
+        //disconnect from spotifys
         mSpotify.disconnect();
     }
 
@@ -229,6 +245,9 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
 
     }
 
+    /*
+    * Start the Sandbox Mode - Initialize sandbox specific buttons, load the users specified templates
+     */
     private void startSandboxMode(LayoutInflater inflater, ViewGroup container) {
         v = inflater.inflate(R.layout.fragment_sandbox, container, false);
         mSelectButton = v.findViewById(R.id.select);
@@ -251,9 +270,13 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
             e.printStackTrace();
         }
 
+        //set the remaining listeners for synth pads
         setOnClickListeners();
     }
 
+    /*
+     * Class for selecting the current template asynchronously
+     */
     private class GetCurrentTemplateTask extends AsyncTask<String, Void, Template> {
         Template currentTemplate;
 
@@ -261,29 +284,35 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
         protected Template doInBackground(String... name) {
             return db.templateDao().getTemplate(name[0]);
         }
-
-        protected void onProgressUpdate() {
-        }
-
-        protected void onPostExecute() {
-        }
     }
 
+    /*
+     * Start the Training mode - this means the user is either in Training Note, or Training Spotify modes, handles that selection
+     * and inflates the proper view based on that selection
+     */
     private void startTrainingMode(LayoutInflater inflater, ViewGroup container) {
+
+        //select view based on mode
         if (this.trainingMode.equals("Spotify")) {
             v = inflater.inflate(R.layout.fragment_spotify, container, false);
         } else {
             v = inflater.inflate(R.layout.fragment_note, container, false);
         }
+        //title change
         getActivity().setTitle("TuneTrain - " + trainingMode + " Training");
+
+        //setting up Training specific buttons
         mPlayButton = v.findViewById(R.id.play);
         mPlayButton.setOnClickListener(this);
 
         mNextButton = v.findViewById(R.id.next);
         mNextButton.setOnClickListener(this);
         mNextButton.setEnabled(false);
+
+        //set the remaining listeners for synth pads
         setOnClickListeners();
 
+        //if it's spotfiy mode do some extra set up
         if (this.trainingMode.equals("Spotify")) {
             startSpotifyMode();
         }
@@ -305,16 +334,25 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
         mNextButton.setEnabled(false);
         mPrevButton.setEnabled(false);
         mPlaylistButton.setEnabled(true);
-        mSpotify = SpotifySession.getSpotifyInstance(getActivity());
     }
 
+    /*
+    * Method called for handing dropdown in Spotify mode for the user to select a Playlist from
+    * their Spotify library, uses an Android Spinner
+     */
     private void playlistSelect() {
 
+        //initalize the Spinner
         Spinner dropdown = v.findViewById(R.id.playlist_spinner);
         dropdown.setVisibility(View.VISIBLE);
+
+        //Get playlists from the Spotfiy acocunt
         List<PlaylistSimple> playlists = mSpotify.getMyPlaylists();
         Log.d(TAG, Integer.toString(playlists.size()));
+
+        //Populate the playlist names
         String[] playlistNames = new String[playlists.size()+1];
+        //set the first value to a non-playlist name so it doesn't start playing automatically
         playlistNames[0] = "Select a Playlist";
         for (int x = 1; x < playlistNames.length; x++) {
             playlistNames[x] = playlists.get(x-1).name;
@@ -322,12 +360,14 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
 
         }
 
+        //Adapter for populating the Android Spinner with data
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, playlistNames);
         dropdown.setAdapter(adapter);
         dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Log.d(TAG, "Position: " + position);
+                //first value in the list isn't a valid playlist
                 if (position != 0) {
                     PlaylistSimple selectedPlaylist = playlists.get(position-1);
                     Log.d(TAG, selectedPlaylist.name);
@@ -336,13 +376,16 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
 
                 }
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
     }
 
+
+    /*
+    * Sets up the SoundPool objects so that Synth Pads will play the proper Notes
+     */
     private void setUpSoundPool() {
         //initialize soundpool
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -360,6 +403,10 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
         }
     }
 
+    /*
+    * Sets up Listeners for the Synth Pads from the current selected Playlist
+    * (Either the Chromatic Scale for Training Mode OR A User selected Template for Sandbox Mode)
+     */
     private void setOnClickListeners() {
         //set up onclick listeners for buttons
         for(int i = 0; i <BUTTON_IDS.length; i++) {
@@ -373,7 +420,13 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
 
         }
     }
+
+    /*
+    * For Note Training - Play a Random note
+     */
     public void playRandomNote(boolean newNote) {
+
+        //if new note is true, find a new random note
         if (newNote) {
             rIndex = r.nextInt(currentPads.length);
         }
@@ -382,6 +435,10 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
 
     }
 
+
+    /*
+    * For Spotify and Note modes - check and display a Toast if the played note matches the Note/Song Key sin question
+     */
     public void handleNotePress() {
         if (trainingMode.equals("Note") && GameStart) {
             if (lastPlayed.equals(randomNote)) {
