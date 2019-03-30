@@ -90,7 +90,8 @@ public abstract class AppDatabase extends RoomDatabase {
             nDao.deleteAll();
             tDao.insertAll(Template.populateChromaticScale());
             tDao.insertAll(Template.populateMajorScales());
-            tDao.insertAll(Template.populateMinorScales());
+            tDao.insertAll(Template.populateNaturalMinorScales());
+            tDao.insertAll(Template.populateHarmonicMinorScales());
             tDao.insertAll(Template.populateBluesScales());
             nDao.insertAll(Note.populateData());
             return null;
