@@ -9,8 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SelectTemplateActivity"
-            android:parentActivityName="com.example.alec.tunetrain.SandboxActivity" />
+        <activity android:name=".AddTemplateActivity"></activity>
+        <activity
+            android:name=".SelectTemplateActivity"
+            android:parentActivityName=".SandboxActivity" />
         <activity android:name=".LandingPageActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,13 +21,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".StatsActivity" />
-        <activity android:name=".TrainingActivity"
-            android:parentActivityName="com.example.alec.tunetrain.LandingPageActivity" />
+        <activity
+            android:name=".TrainingActivity"
+            android:parentActivityName=".LandingPageActivity" />
         <activity
             android:name=".SandboxActivity"
             android:label="@string/title_activity_sandbox"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName="com.example.alec.tunetrain.LandingPageActivity" />
+            android:parentActivityName=".LandingPageActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.spotify.sdk.android.authentication.LoginActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />

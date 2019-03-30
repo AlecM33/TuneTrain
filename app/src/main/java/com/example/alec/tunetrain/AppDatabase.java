@@ -14,7 +14,7 @@ import com.example.alec.tunetrain.Daos.TemplateDao;
 import java.util.concurrent.Executors;
 
 @Database(entities = {Template.class, Guess.class, Note.class, PlayedNote.class, Playlist.class,
-        Scale.class, SpotifyAccount.class}, version = 1, exportSchema = false)
+        Scale.class, SpotifyAccount.class}, version = 2, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
 

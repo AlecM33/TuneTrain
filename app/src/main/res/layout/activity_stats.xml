@@ -16,6 +16,40 @@
         android:textSize="30sp"
         android:text="@string/stats_title"/>
     <TextView
+        android:id="@+id/notes_played_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_marginStart="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="20dp"
+        android:text="Total Notes Played:" />
+    <TextView
+        android:id="@+id/notes_played"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:layout_marginStart="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="20dp" />
+    <TextView
+        android:id="@+id/favorite_note_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_marginStart="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="20dp"
+        android:text="Favorite Note:" />
+    <TextView
+        android:id="@+id/favorite_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:layout_marginStart="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="20dp" />
+    <TextView
         android:id="@+id/percent_correct_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
