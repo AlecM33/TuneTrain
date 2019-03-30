@@ -89,6 +89,7 @@ public class TrainingActivity extends AppCompatActivity implements TrainingModeD
             fragment = new SoundBoardFragment();
             Bundle bundle = new Bundle();
             bundle.putString("Mode", trainingMode);
+            bundle.putString("TOKEN", mSpotify.getToken());
             fragment.setArguments(bundle);
             fm.beginTransaction()
                     .add(R.id.fragment_container, fragment)
