@@ -31,24 +31,32 @@ import retrofit.client.Response;
 
 public class SpotifySession {
 
+    private static SpotifySession INSTANCE;
+    private Activity mActivity;
+
+    //SDK Authorization Vars - TuneTrain Dev App Specific
     private static final String TAG = "TrainingActivity";
     private static final int REQUEST_CODE = 1337;
     private static final String CLIENT_ID = "8a60234733ab4353946cff8fb3c9c90c";
     private static final String REDIRECT_URI = "tune-train-login://callback";
-
-    private static AuthenticationResponse RESPONSE;
     private String authToken = "";
-    private Activity mActivity;
-    private static SpotifySession INSTANCE;
+
+    //Services SDK and WebApi
     private SpotifyAppRemote mSpotifyAppRemote;
+    private SpotifyService WebApi;
+
+    //Current Playing Info
     private String currentTrackID;
+    private String currKey;
+    private boolean isPlaying = false;
+
+    //User Playlist Info
     private List<PlaylistSimple> mMyPlaylists;
     private PlaylistSimple currPlaylist;
-    private boolean isPlaying = false;
-    private String currKey;
+
+    //Static Map of Key ints from Spotify API to Note Names
     private static HashMap<Integer, String> keys = createKeys();
 
-    private SpotifyService WebApi;
 
     private SpotifySession(Activity activity) {
         this.mActivity = activity;
@@ -62,6 +70,7 @@ public class SpotifySession {
 
         return INSTANCE;
     }
+
 
 
     private void buildSession() {
@@ -118,7 +127,7 @@ public class SpotifySession {
                     @Override
                     public void onFailure(Throwable throwable) {
                         Log.e(TAG, throwable.getMessage(), throwable);
-
+                        Log.d(TAG, "Error Connecting to Spotify");
                         // Something went wrong when attempting to connect! Handle errors here
                     }
                 });
@@ -284,10 +293,6 @@ public class SpotifySession {
     public void setCurrentPlaylist(PlaylistSimple playlist) {
         this.currPlaylist = playlist;
         playPlaylist();
-    }
-
-    public String getToken() {
-        return this.authToken;
     }
 
 }

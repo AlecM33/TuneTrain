@@ -14,7 +14,7 @@
             android:id="@+id/playlist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="SELECT PLAYLIST" />
+            android:text="@string/playlist_select" />
 
         <Spinner
             android:id="@+id/playlist_spinner"
@@ -37,92 +37,92 @@
             android:layout_column="0"
             android:width="75dp"
             android:height="70dp"
-            android:text="PREV" />
+            android:text="@string/prev" />
 
         <Button
             android:id="@+id/play"
             android:width="75dp"
             android:height="70dp"
-            android:text="PLAY NOTE"
+            android:text="@string/note_play"
             android:textSize="11dp" />
 
         <Button
             android:id="@+id/next"
             android:width="75dp"
             android:height="70dp"
-            android:text="NEXT" />
+            android:text="@string/next" />
 
         <Button
             android:id="@+id/pad1"
             android:width="75dp"
             android:height="70dp"
-            android:text="A" />
+            android:text="@string/A" />
 
         <Button
             android:id="@+id/pad2"
             android:width="75dp"
             android:height="70dp"
-            android:text="Bb" />
+            android:text="@string/Bb" />
 
         <Button
             android:id="@+id/pad3"
             android:width="75dp"
             android:height="70dp"
-            android:text="B" />
+            android:text="@string/B" />
 
         <Button
             android:id="@+id/pad4"
             android:width="75dp"
             android:height="70dp"
-            android:text="C" />
+            android:text="@string/C" />
 
         <Button
             android:id="@+id/pad5"
             android:width="75dp"
             android:height="70dp"
-            android:text="C#" />
+            android:text="@string/Cs" />
 
         <Button
             android:id="@+id/pad6"
             android:width="75dp"
             android:height="70dp"
-            android:text="D" />
+            android:text="@string/D" />
 
         <Button
             android:id="@+id/pad7"
             android:width="75dp"
             android:height="70dp"
-            android:text="Eb" />
+            android:text="@string/Eb" />
 
         <Button
             android:id="@+id/pad8"
             android:width="75dp"
             android:height="70dp"
-            android:text="E" />
+            android:text="@string/E" />
 
         <Button
             android:id="@+id/pad9"
             android:width="75dp"
             android:height="70dp"
-            android:text="F" />
+            android:text="@string/F" />
 
         <Button
             android:id="@+id/pad10"
             android:width="75dp"
             android:height="70dp"
-            android:text="F#" />
+            android:text="@string/Fs" />
 
         <Button
             android:id="@+id/pad11"
             android:width="75dp"
             android:height="70dp"
-            android:text="G" />
+            android:text="@string/G" />
 
         <Button
             android:id="@+id/pad12"
             android:width="75dp"
             android:height="70dp"
-            android:text="Ab" />
+            android:text="@string/Ab" />
 
     </GridLayout>
 
