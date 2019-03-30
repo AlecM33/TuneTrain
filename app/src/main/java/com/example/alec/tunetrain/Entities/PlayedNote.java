@@ -9,10 +9,10 @@ public class PlayedNote {
     @PrimaryKey(autoGenerate = true)
     public int playId;
 
-    @ColumnInfo(name = "note_id")
-    public int noteId;
+    @ColumnInfo(name = "note_name")
+    public String noteName;
 
-    public PlayedNote(int noteId) {
-        this.noteId = noteId;
+    public PlayedNote(String noteName) {
+        this.noteName = noteName;
     }
 }

@@ -10,19 +10,25 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.alec.tunetrain.Entities.Guess;
+import com.example.alec.tunetrain.Entities.PlayedNote;
 import com.example.alec.tunetrain.Entities.Template;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class StatsActivity extends AppCompatActivity {
 
     private static final String TAG = "StatsActivity";
     private List<Guess> allGuesses;
+    private List<PlayedNote> allNotes;
     public TextView mCorrectPercentage;
     public TextView mGuessesNeeded;
+    public TextView mFavoriteNote;
+    public TextView mNotesPlayed;
     public AppDatabase db;
 
     @Override
@@ -32,17 +38,26 @@ public class StatsActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_stats);
         db = AppDatabase.getAppDatabase(this.getBaseContext());
-        StatsActivity.GetStatTask statTask = new StatsActivity.GetStatTask();
+        StatsActivity.GetGuessStatsTask guessTask = new StatsActivity.GetGuessStatsTask();
+        //StatsActivity.GetNotesPlayedStatsTask noteTask = new StatsActivity.GetNotesPlayedStatsTask();
         mCorrectPercentage = (TextView)findViewById(R.id.percent_correct);
         mGuessesNeeded = (TextView)findViewById(R.id.guesses_needed);
+        mFavoriteNote = (TextView)findViewById(R.id.favorite_note);
+        mNotesPlayed = (TextView)findViewById(R.id.notes_played);
         // TODO: Refactor
         try {
-            allGuesses = statTask.execute().get();
+            allGuesses = guessTask.execute().get();
+            allNotes = db.notesPlayedDao().getPlayedNotes();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        calculateGuessStats();
+        calculateNoteStats();
+    }
+
+    private void calculateGuessStats() {
         if (allGuesses.size() > 0) {
             double averageGuessesNeeded = calculateAverageGuessedNeeded(allGuesses);
             double correctPercentage = (1 / averageGuessesNeeded) * 100;
@@ -54,13 +69,37 @@ public class StatsActivity extends AppCompatActivity {
         }
     }
 
+    private void calculateNoteStats() {
+        if (allNotes.size() > 0) {
+            mNotesPlayed.setText(String.format(Locale.getDefault(), "%d", allNotes.size()));
+            mFavoriteNote.setText(String.format(Locale.getDefault(), "%s", calculateFavoriteNote(allNotes)));
+        } else {
+            mNotesPlayed.setText(R.string.no_guesses);
+            mFavoriteNote.setText(R.string.no_guesses);
+        }
+    }
+
     // TODO: Refactor
-    private class GetStatTask extends AsyncTask<Void, Void, List<Guess>> {
-        Template currentTemplate;
+    private class GetGuessStatsTask extends AsyncTask<Void, Void, List<Guess>> {
 
         @Override
         protected List<Guess> doInBackground(Void... params) {
             return db.guessDao().getGuesses();
+        }
+
+        protected void onProgressUpdate() {
+        }
+
+        protected void onPostExecute() {
+        }
+    }
+
+    // TODO: Refactor
+    private class GetNotesPlayedStatsTask extends AsyncTask<Void, Void, List<PlayedNote>> {
+
+        @Override
+        protected List<PlayedNote> doInBackground(Void... params) {
+            return db.notesPlayedDao().getPlayedNotes();
         }
 
         protected void onProgressUpdate() {
@@ -75,7 +114,7 @@ public class StatsActivity extends AppCompatActivity {
         List<Integer> guessesNeeded = new ArrayList<>();
         while (current < allGuesses.size()) {
             int incorrectStreak = 0;
-            while(!allGuesses.get(current).correct) {
+            while(current < allGuesses.size() && !allGuesses.get(current).correct) {
                 incorrectStreak++;
                 current++;
             }
@@ -90,33 +129,22 @@ public class StatsActivity extends AppCompatActivity {
     }
 
     //TODO: implement using notesPlayedDao
-    private static String calculateFavoriteNote(List<Guess> allGuesses) {
-        return "";
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart() called");
-    }
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume() called");
-    }
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause() called");
-    }
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop() called");
-    }
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy() called");
+    private static String calculateFavoriteNote(List<PlayedNote> allNotes) {
+        String favoriteName = "";
+        int max = 0;
+        Map<String, Integer> frequencies = new HashMap<>();
+        for (PlayedNote note : allNotes) {
+            if(frequencies.containsKey(note.noteName)) {
+                int occurrences = frequencies.get(note.noteName);
+                frequencies.put(note.noteName, occurrences + 1);
+                if (occurrences + 1 > max) {
+                    favoriteName = note.noteName;
+                    max = occurrences + 1;
+                }
+            } else {
+                frequencies.put(note.noteName, 0);
+            }
+        }
+        return favoriteName;
     }
 }

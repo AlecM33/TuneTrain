@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.alec.tunetrain.Entities.Guess;
 import com.example.alec.tunetrain.Entities.Note;
+import com.example.alec.tunetrain.Entities.PlayedNote;
 import com.example.alec.tunetrain.Entities.Template;
 
 import java.util.HashMap;
@@ -465,6 +466,7 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
                 Log.d(TAG, "INCORRECT");
             }
         }
+        db.notesPlayedDao().insert(new PlayedNote(lastPlayed));
 
         if (this.startOfSession) {
             this.startOfSession = false;
