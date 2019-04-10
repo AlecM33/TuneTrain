@@ -122,7 +122,6 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
         super.onStart();
         //start up the spotify authentication
         mSpotify = SpotifySession.getSpotifyInstance(getActivity());
-        mSpotify.connect();
     }
 
     @Override

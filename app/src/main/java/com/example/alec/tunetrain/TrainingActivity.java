@@ -12,7 +12,6 @@ public class TrainingActivity extends AppCompatActivity implements TrainingModeD
 
     private static final String TAG = "TrainingActivity";
     private String trainingMode = "";
-    private String authToken = "";
     private SpotifySession mSpotify;
 
     @Override
@@ -71,7 +70,7 @@ public class TrainingActivity extends AppCompatActivity implements TrainingModeD
         // User touched the dialog's Spotify button
         this.trainingMode = "Spotify";
         Log.d(TAG, "TRAINING MODE: " + trainingMode);
-        loadSoundBoardFragment(trainingMode);
+        loadSoundBoardFragment();
 
     }
 
@@ -80,13 +79,12 @@ public class TrainingActivity extends AppCompatActivity implements TrainingModeD
         // User touched the dialog's Note button
         this.trainingMode = "Note";
         Log.d(TAG, "TRAINING MODE: " + trainingMode);
-        loadSoundBoardFragment(trainingMode);
-
+        loadSoundBoardFragment();
 
     }
 
     //Load the sound board fragment, sending the correct User specified Training mode
-    public void loadSoundBoardFragment (String mode) {
+    public void loadSoundBoardFragment () {
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);
         if (fragment == null) {
@@ -105,6 +103,6 @@ public class TrainingActivity extends AppCompatActivity implements TrainingModeD
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         mSpotify.setResponse(requestCode, resultCode, intent);
-
+        mSpotify.connect();
     }
 }

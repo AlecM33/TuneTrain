@@ -2,6 +2,7 @@ package com.example.alec.tunetrain;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.spotify.android.appremote.api.ConnectionParams;
@@ -15,6 +16,7 @@ import com.spotify.sdk.android.authentication.AuthenticationResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyCallback;
@@ -23,7 +25,6 @@ import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.AudioFeaturesTrack;
 import kaaes.spotify.webapi.android.models.Pager;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
-import kaaes.spotify.webapi.android.models.UserPrivate;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.client.Response;
@@ -77,10 +78,8 @@ public class SpotifySession {
         AuthenticationRequest.Builder builder =
                 new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI);
 
-        builder.setScopes(new String[]{"streaming", "user-read-playback-state", "playlist-read-private", "user-read-email",
-        "user-read-private"});
+        builder.setScopes(new String[]{"streaming", "user-read-playback-state", "playlist-read-private", "user-read-private"});
         AuthenticationRequest request = builder.build();
-
         AuthenticationClient.openLoginActivity(this.mActivity, REQUEST_CODE, request);
 
 
@@ -197,43 +196,49 @@ public class SpotifySession {
                 .build();
 
         WebApi = restAdapter.create(SpotifyService.class);
+        SpotifySession.GetPlaylists playlistsTask = new SpotifySession.GetPlaylists();
+        try {
+            mMyPlaylists = playlistsTask.execute().get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-        WebApi.getMe(new SpotifyCallback<UserPrivate>() {
-            @Override
-            public void success(UserPrivate savedUser, Response response) {
-                // handle successful response
-                Log.d(TAG, savedUser.display_name);
-                Log.d(TAG, savedUser.email);
-                Log.d(TAG, savedUser.id);
-            }
+    }
 
-            @Override
-            public void failure(SpotifyError error) {
-                // handle error
-                Log.e(TAG, error.getMessage());
-                Log.d(TAG, "ERROR GETTING USER");
-            }
-        });
+    private class GetPlaylists extends AsyncTask<Void, Void, List<PlaylistSimple>> {
 
-        WebApi.getMyPlaylists(new SpotifyCallback<Pager<PlaylistSimple>>() {
-            @Override
-            public void success(Pager<PlaylistSimple> playlists, Response response) {
-                // handle successful response
-                mMyPlaylists = new ArrayList<>();
-                for (PlaylistSimple playlist : playlists.items) {
-                    Log.d(TAG, playlist.name);
-                    mMyPlaylists.add(playlist);
+        @Override
+        protected List<PlaylistSimple> doInBackground(Void... params){
+            List<PlaylistSimple> mMyPlaylists = new ArrayList<>();
+            WebApi.getMyPlaylists(new SpotifyCallback<Pager<PlaylistSimple>>() {
+                @Override
+                public void success(Pager<PlaylistSimple> playlists, Response response) {
+                    // handle successful response
+                    for (PlaylistSimple playlist : playlists.items) {
+                        Log.d(TAG, playlist.name);
+                        mMyPlaylists.add(playlist);
+                    }
+
                 }
-            }
 
-            @Override
-            public void failure(SpotifyError error) {
-                // handle error
-                Log.e(TAG, error.getMessage());
-                Log.d(TAG, "ERROR GETTING PLAYLISTS");
-            }
-        });
+                @Override
+                public void failure(SpotifyError error) {
+                    // handle error
+                    Log.e(TAG, error.getMessage());
+                    Log.d(TAG, "ERROR GETTING PLAYLISTS");
+                }
+            });
 
+            return mMyPlaylists;
+        }
+
+        protected void onProgressUpdate() {
+        }
+
+        protected void onPostExecute() {
+        }
     }
 
     public void getTrackInfo() {
