@@ -137,14 +137,29 @@ public class Template {
         return majorTemplates;
     }
 
-    private static Template[] generateMinorTemplates() {
+    private static Template[] generateNaturalMinorTemplates() {
         String[] notes = {"A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab"};
         Double[] intervals = {1.0, 0.5, 1.0, 1.0, 0.5, 1.0, 1.0};
         Template[] minorTemplates = new Template[12];
         String[] notesInScale;
         for (int i = 0; i < notes.length; i++) {
             notesInScale = getNotesInScale(notes, i, intervals);
-            minorTemplates[i] = new Template(notes[i] + " Minor", notesInScale[0],
+            minorTemplates[i] = new Template(notes[i] + " Natural Minor", notesInScale[0],
+                    notesInScale[1], notesInScale[2], notesInScale[3], notesInScale[4],
+                    notesInScale[5], notesInScale[6], "none", "none", "none",
+                    "none", "none");
+        }
+        return minorTemplates;
+    }
+
+    private static Template[] generateHarmonicMinorTemplates() {
+        String[] notes = {"A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab"};
+        Double[] intervals = {1.0, 0.5, 1.0, 1.0, 0.5, 1.5, 0.5};
+        Template[] minorTemplates = new Template[12];
+        String[] notesInScale;
+        for (int i = 0; i < notes.length; i++) {
+            notesInScale = getNotesInScale(notes, i, intervals);
+            minorTemplates[i] = new Template(notes[i] + " Harmonic Minor", notesInScale[0],
                     notesInScale[1], notesInScale[2], notesInScale[3], notesInScale[4],
                     notesInScale[5], notesInScale[6], "none", "none", "none",
                     "none", "none");
@@ -172,8 +187,12 @@ public class Template {
         return generateMajorTemplates();
     }
 
-    public static Template[] populateMinorScales() {
-        return generateMinorTemplates();
+    public static Template[] populateNaturalMinorScales() {
+        return generateNaturalMinorTemplates();
+    }
+
+    public static Template[] populateHarmonicMinorScales() {
+        return generateHarmonicMinorTemplates();
     }
 
     public static Template[] populateBluesScales() {
