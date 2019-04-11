@@ -3,6 +3,7 @@ package com.example.alec.tunetrain;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Looper;
 import android.util.Log;
 
 import com.spotify.android.appremote.api.ConnectionParams;
@@ -106,31 +107,33 @@ public class SpotifySession {
 
     public void connect() {
 
-        ConnectionParams connectionParams =
-                new ConnectionParams.Builder(CLIENT_ID)
-                        .setRedirectUri(REDIRECT_URI)
-                        .showAuthView(true)
-                        .build();
+        new Thread(() -> {
+            Looper.prepare();
+            ConnectionParams connectionParams =
+                    new ConnectionParams.Builder(CLIENT_ID)
+                            .setRedirectUri(REDIRECT_URI)
+                            .showAuthView(true)
+                            .build();
 
-        SpotifyAppRemote.connect(mActivity, connectionParams,
-                new Connector.ConnectionListener() {
+            SpotifyAppRemote.connect(mActivity, connectionParams,
+                    new Connector.ConnectionListener() {
 
-                    @Override
-                    public void onConnected(SpotifyAppRemote spotifyAppRemote) {
-                        mSpotifyAppRemote = spotifyAppRemote;
-                        Log.d(TAG, "Connected! Yay!");
-                        // Now you can start interacting with App Remote
-                        connected();
-                    }
+                        @Override
+                        public void onConnected(SpotifyAppRemote spotifyAppRemote) {
+                            mSpotifyAppRemote = spotifyAppRemote;
+                            Log.d(TAG, "Connected! Yay!");
+                            // Now you can start interacting with App Remote
+                            connected();
+                        }
 
-                    @Override
-                    public void onFailure(Throwable throwable) {
-                        Log.e(TAG, throwable.getMessage(), throwable);
-                        Log.d(TAG, "Error Connecting to Spotify");
-                        // Something went wrong when attempting to connect! Handle errors here
-                    }
-                });
-
+                        @Override
+                        public void onFailure(Throwable throwable) {
+                            Log.e(TAG, throwable.getMessage(), throwable);
+                            Log.d(TAG, "Error Connecting to Spotify");
+                            // Something went wrong when attempting to connect! Handle errors here
+                        }
+                    });
+        }).start();
     }
 
     private void connected() {

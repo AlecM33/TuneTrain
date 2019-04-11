@@ -20,8 +20,11 @@ public class TrainingActivity extends AppCompatActivity implements TrainingModeD
         setContentView(R.layout.activity_training);
 
         //display dialog for training mode selection
-        showModeSelectionDialog();
-
+        if (savedInstanceState == null) {
+            showModeSelectionDialog();
+        } else {
+            trainingMode = savedInstanceState.getString("Mode");
+        }
     }
 
     @Override
@@ -33,6 +36,14 @@ public class TrainingActivity extends AppCompatActivity implements TrainingModeD
         mSpotify = SpotifySession.getSpotifyInstance(this);
 
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        Log.i(TAG, "onSaveInstanceState");
+        savedInstanceState.putString("Mode", trainingMode);
+    }
+
     @Override
     public void onResume() {
         super.onResume();

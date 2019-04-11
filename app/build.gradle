@@ -67,6 +67,8 @@ dependencies {
     implementation 'com.mcxiaoke.volley:library-aar:1.0.1'
 //    implementation 'com.github.kaaes:spotify-web-api-android:0.4.1'
     implementation 'com.github.ericcparsons:spotify-web-api-android:0.4.2'
+    testImplementation 'junit:junit:4.12'
+
 
 
 }

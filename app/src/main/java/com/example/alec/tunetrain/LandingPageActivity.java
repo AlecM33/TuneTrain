@@ -24,7 +24,9 @@ public class LandingPageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate(Bundle) called");
         setContentView(R.layout.landing_page);
-        AppDatabase db = AppDatabase.getAppDatabase(this);
+
+        //initialized database right away
+        AppDatabase.getAppDatabase(this);
 
         //event listener for statsButton
         mStatsButton = (Button)findViewById(R.id.stats_button);
