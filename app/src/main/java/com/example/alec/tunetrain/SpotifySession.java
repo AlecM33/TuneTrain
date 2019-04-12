@@ -37,7 +37,7 @@ public class SpotifySession {
     private Activity mActivity;
 
     //SDK Authorization Vars - TuneTrain Dev App Specific
-    private static final String TAG = "TrainingActivity";
+    private static final String TAG = "SpotifyWrapper";
     private static final int REQUEST_CODE = 1337;
     private static final String CLIENT_ID = "8a60234733ab4353946cff8fb3c9c90c";
     private static final String REDIRECT_URI = "tune-train-login://callback";
@@ -75,6 +75,9 @@ public class SpotifySession {
 
 
 
+    /*
+     * Start building the spotify SDK session with proper scopes needed for the app
+     */
     private void buildSession() {
         AuthenticationRequest.Builder builder =
                 new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI);
@@ -86,6 +89,12 @@ public class SpotifySession {
 
     }
 
+    /*
+     * HashMap representing the number to String key system that
+     * Spotify's WebAPI documented
+     * i.e. if a song on the WebAPI is in the key of "0" it means
+     * the song is in C
+     */
     private static HashMap<Integer, String> createKeys() {
         HashMap<Integer, String> result = new HashMap<>();
         result.put(-1, "none");
@@ -105,10 +114,11 @@ public class SpotifySession {
         return result;
     }
 
+    /*
+     * Connect to Spotify Android SDK with the CLIENT_ID
+     */
     public void connect() {
 
-        new Thread(() -> {
-            Looper.prepare();
             ConnectionParams connectionParams =
                     new ConnectionParams.Builder(CLIENT_ID)
                             .setRedirectUri(REDIRECT_URI)
@@ -133,9 +143,11 @@ public class SpotifySession {
                             // Something went wrong when attempting to connect! Handle errors here
                         }
                     });
-        }).start();
     }
 
+    /*
+     * Continuously get the new info while connected to Spotify
+     */
     private void connected() {
         mSpotifyAppRemote.getPlayerApi()
                 .subscribeToPlayerState()
@@ -146,19 +158,35 @@ public class SpotifySession {
                         Log.d(TAG, track.name + " by " + track.artist.name);
                         Log.d(TAG, currentTrackID);
                     }
-                    getTrackInfo();
+                    SpotifySession.GetTrackInfo trackInfoTask = new SpotifySession.GetTrackInfo();
+                    try {
+                        trackInfoTask.execute().get();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 });
     }
 
+    /*
+     * Disconnect from Spotify API
+     */
     public void disconnect() {
         SpotifyAppRemote.disconnect(mSpotifyAppRemote);
     }
 
 
+    /*
+     * Get the authentication response token from Spotfiy for access to the Android SDK
+     * Runs on a seperate thread for efficiency
+     */
     public void setResponse(int requestCode, int resultCode, Intent intent) {
 
         Log.d(TAG, "On Activity Result called, Spotify gets auth result");
 
+        new Thread(() -> {
+            Looper.prepare();
         // Check if result comes from the correct activity
         if (requestCode == REQUEST_CODE) {
             AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
@@ -184,8 +212,13 @@ public class SpotifySession {
         }
 
         setUpWebApi();
+        }).start();
+
     }
 
+    /*
+        Set up REST connection to Spotify's web API.
+     */
     private void setUpWebApi() {
 
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -210,6 +243,7 @@ public class SpotifySession {
 
     }
 
+    //Async Task for getting the Playlists from the WebAPI
     private class GetPlaylists extends AsyncTask<Void, Void, List<PlaylistSimple>> {
 
         @Override
@@ -244,33 +278,52 @@ public class SpotifySession {
         }
     }
 
-    public void getTrackInfo() {
 
-        Log.d(TAG, currentTrackID.substring(14));
-        WebApi.getTrackAudioFeatures(currentTrackID.substring(14), new SpotifyCallback<AudioFeaturesTrack>() {
-            @Override
-            public void success(AudioFeaturesTrack info, Response response) {
-                // handle successful response
-                currKey = keys.get(info.key);
-                if (currKey.equals("none")) {
-                    nextTrack();
+    //Async Task for getting the Track Info from the WebAPI
+    private class GetTrackInfo extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params){
+            Log.d(TAG, currentTrackID.substring(14));
+            WebApi.getTrackAudioFeatures(currentTrackID.substring(14), new SpotifyCallback<AudioFeaturesTrack>() {
+                @Override
+                public void success(AudioFeaturesTrack info, Response response) {
+                    // handle successful response
+                    currKey = keys.get(info.key);
+                    if (currKey.equals("none")) {
+                        nextTrack();
+                    }
+                    Log.d(TAG, "Current Key of Song: " + currKey);
                 }
-                Log.d(TAG, "Current Key of Song: " + currKey);
-            }
 
-            @Override
-            public void failure(SpotifyError error) {
-                // handle error
-                Log.d(TAG, "Error Getting Track Info");
-            }
-        });
+                @Override
+                public void failure(SpotifyError error) {
+                    // handle error
+                    Log.d(TAG, "Error Getting Track Info");
+                }
+            });
+            return null;
+        }
+
+        protected void onProgressUpdate() {
+        }
+
+        protected void onPostExecute() {
+        }
     }
 
+
+
+    /*
+     * Returns the current key of the song playing
+     */
     public String getCurrentKey() {
         return this.currKey;
     }
 
-
+    /*
+     * Controls play/pause for Spotify player
+     */
     public void play() {
         if (isPlaying) {
             mSpotifyAppRemote.getPlayerApi().pause();
@@ -281,25 +334,41 @@ public class SpotifySession {
         }
     }
 
+    /*
+     * Plays the current playlist
+     */
     private void playPlaylist() {
         mSpotifyAppRemote.getPlayerApi().play(this.currPlaylist.uri);
         isPlaying = true;
     }
 
+    /*
+     * Go to the next strack in Spotify queue
+     */
     public void nextTrack() {
         mSpotifyAppRemote.getPlayerApi().skipNext();
     }
 
+    /*
+     * Go to previous track in Spotify queue
+     */
     public void prevTrack() {
         mSpotifyAppRemote.getPlayerApi().skipPrevious();
     }
 
+    /*
+     * Return the currently Authorized Spotify Users playlists
+     */
     public List<PlaylistSimple> getMyPlaylists() {
         return mMyPlaylists;
     }
 
+    /*
+     * Set the selected playlist the user wants to play
+     */
     public void setCurrentPlaylist(PlaylistSimple playlist) {
         this.currPlaylist = playlist;
+        Log.d(TAG, "CURRENT PLAYLIST: " + currPlaylist.name + " " + currPlaylist.uri);
         playPlaylist();
     }
 

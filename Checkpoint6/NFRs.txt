@@ -1,0 +1,7 @@
+1. Screen Rotation on Sandbox, Stats, and TrainingModes maintains the current State
+2. Network Loss does not cause any crashing, user is purely unable to select any playlists in Spotify mode, every other mode works
+natively without network/GPS involvement
+3. Spotify Android SDK connectivity performs on a seperate Thread for increased performance/efficiency
+4. Spotify initial WebAPI set up runs on seperate Thread for increaed performance/efficiency
+4. Spotfiy WebAPI calls perform asynchronously for increased performance
+5. Room database calls (Templates and Notes) perform asynchronously in Training and Sandbox Mode for increased performance

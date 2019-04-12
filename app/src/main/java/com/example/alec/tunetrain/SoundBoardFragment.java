@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.alec.tunetrain.Entities.Guess;
@@ -60,6 +61,8 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
     private Button mCreateButton;
     private Button mPlaylistButton;
     private Button mPrevButton;
+
+    private TextView mCurrentTemplate;
 
     private Toast toast;
 
@@ -253,15 +256,21 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
         mSelectButton.setOnClickListener(this);
         mCreateButton = v.findViewById(R.id.create);
         mCreateButton.setOnClickListener(this);
+        mCurrentTemplate = v.findViewById(R.id.currentTemplate);
+
 
         GetCurrentTemplateTask templateTask = new GetCurrentTemplateTask();
         try {
             if(this.templateName != null) {
                 Template result = templateTask.execute(this.templateName).get();
                 currentPads = result.getPads();
+                mCurrentTemplate.setText(result.templateName);
+
             } else {
                 Template result = templateTask.execute("C Major").get();
                 currentPads = result.getPads();
+                mCurrentTemplate.setText(result.templateName);
+
             }
         } catch (ExecutionException e) {
             e.printStackTrace();
