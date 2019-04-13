@@ -50,7 +50,7 @@ public class SoundBoardFragment extends Fragment implements View.OnClickListener
     private boolean isPlaying;
 
     private String templateName;
-    private String lastPlayed = "A";
+    public String lastPlayed = "A";
     private String randomNote = "";
     private String trainingMode;
 
