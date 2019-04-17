@@ -55,72 +55,96 @@
             android:text="@string/next" />
 
         <Button
+            android:layout_margin="5dp"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:id="@+id/pad1"
             android:width="100dp"
             android:height="75dp"
             android:text="@string/A" />
 
         <Button
+            android:layout_margin="5dp"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:id="@+id/pad2"
             android:width="100dp"
             android:height="75dp"
             android:text="@string/Bb" />
 
         <Button
+            android:layout_margin="5dp"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:id="@+id/pad3"
             android:width="100dp"
             android:height="75dp"
             android:text="@string/B" />
 
         <Button
+            android:layout_margin="5dp"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:id="@+id/pad4"
             android:width="100dp"
             android:height="75dp"
             android:text="@string/C" />
 
         <Button
+            android:layout_margin="5dp"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:id="@+id/pad5"
             android:width="100dp"
             android:height="75dp"
             android:text="@string/Cs" />
 
         <Button
+            android:layout_margin="5dp"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:id="@+id/pad6"
             android:width="100dp"
             android:height="75dp"
             android:text="@string/D" />
 
         <Button
+            android:layout_margin="5dp"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:id="@+id/pad7"
             android:width="100dp"
             android:height="75dp"
             android:text="@string/Eb" />
 
         <Button
+            android:layout_margin="5dp"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:id="@+id/pad8"
             android:width="100dp"
             android:height="75dp"
             android:text="@string/E" />
 
         <Button
+            android:layout_margin="5dp"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:id="@+id/pad9"
             android:width="100dp"
             android:height="75dp"
             android:text="@string/F" />
 
         <Button
+            android:layout_margin="5dp"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:id="@+id/pad10"
             android:width="100dp"
             android:height="75dp"
             android:text="@string/Fs" />
 
         <Button
+            android:layout_margin="5dp"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:id="@+id/pad11"
             android:width="100dp"
             android:height="75dp"
             android:text="@string/G" />
 
         <Button
+            android:layout_margin="5dp"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:id="@+id/pad12"
             android:width="100dp"
             android:height="75dp"
